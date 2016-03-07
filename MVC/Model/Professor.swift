@@ -17,22 +17,6 @@ class Professor {
     var identifier: String? //database: "_id", created by database
     
     // MARK: Initializers
-    init(firstNameInput: String?, lastNameInput: String?, schoolIdentifier: String?) {
-        firstName = (firstNameInput != nil) ? firstNameInput! : ""
-        lastName = (lastNameInput != nil) ? lastNameInput! : ""
-        if schoolIdentifier != nil {
-            let table = Table(type: 1)
-            let schoolArray = table.getObjectsWithKeyValue(["_id": schoolIdentifier!], limit: 1)
-            if schoolArray.count != 0 {
-                school = schoolArray[0] as! School
-            } else {
-                school = School(schoolName: nil, stateAbreviation: nil)
-            }
-        } else {
-            school = School(schoolName: nil, stateAbreviation: nil)
-        }
-    }
-    
     init(firstNameInput: String?, lastNameInput: String?, schoolObject: School?) {
         firstName = (firstNameInput != nil) ? firstNameInput! : ""
         lastName = (lastNameInput != nil) ? lastNameInput! : ""
