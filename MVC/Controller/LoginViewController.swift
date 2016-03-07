@@ -60,30 +60,32 @@ class LoginViewController: UIViewController {
         // Login
         KiiSocialConnect.logIn(provider, options: options) { (retUser, provider, retError) -> Void in
             self.suspendUI()
-            if retError == nil && !didRun {
-                // Successful login
-                self.loggedIn()
-                didRun = true
-            } else if retError != nil {
-                print("Login return error code: \(retError.code)")
-                switch retError.code {
-                case 322: // No internet connection alert
-                    let alert = UIAlertController(
-                        title: "Offline",
-                        message: "Please check your internet connection and try again.",
-                        preferredStyle:  UIAlertControllerStyle.Alert
-                    )
-                    alert.addAction(UIAlertAction(
-                        title: "Dismiss",
-                        style: .Cancel)
-                        { (action: UIAlertAction) -> Void in
-                            // Do nothing
-                        }
-                    )
-                    self.presentViewController(alert, animated: true, completion: nil)
-                case 320:
-                    self.resetUI()
-                default: break
+            dispatch_async(dispatch_get_main_queue()) { () -> Void in
+                if retError == nil && !didRun {
+                    // Successful login
+                    self.loggedIn()
+                    didRun = true
+                } else if retError != nil {
+                    print("Login return error code: \(retError.code)")
+                    switch retError.code {
+                    case 322: // No internet connection alert
+                        let alert = UIAlertController(
+                            title: "Offline",
+                            message: "Please check your internet connection and try again.",
+                            preferredStyle:  UIAlertControllerStyle.Alert
+                        )
+                        alert.addAction(UIAlertAction(
+                            title: "Dismiss",
+                            style: .Cancel)
+                            { (action: UIAlertAction) -> Void in
+                                // Do nothing
+                            }
+                        )
+                        self.presentViewController(alert, animated: true, completion: nil)
+                    case 320:
+                        self.resetUI()
+                    default: break
+                    }
                 }
             }
         }
