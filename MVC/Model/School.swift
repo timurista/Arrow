@@ -17,16 +17,8 @@ class School {
     
     // MARK: Initializers
     init(schoolName: String?, stateAbreviation: String?) {
-        if schoolName != nil {
-            name = schoolName!
-        } else {
-            name = ""
-        }
-        if stateAbreviation != nil {
-            state = stateAbreviation!
-        } else {
-            state = ""
-        }
+        name = (schoolName != nil) ? schoolName! : ""
+        state = (stateAbreviation != nil) ? stateAbreviation! : ""
     }
     
     init(kiiObject: KiiObject) {
