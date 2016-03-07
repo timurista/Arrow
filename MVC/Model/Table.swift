@@ -77,6 +77,13 @@ class Table {
                 returnResults.appendContentsOf([school])
             }
             return returnResults
+        case 2:
+            var returnResults: [Class] = []
+            for object in allResults {
+                let classObject = Class(kiiObject: object)
+                returnResults.appendContentsOf([classObject])
+            }
+            return returnResults
         case 6:
             var returnResults: [Professor] = []
             for object in allResults {
@@ -157,6 +164,13 @@ class Table {
             for object in resultsAsKiiObjects {
                 let school = School(kiiObject: object)
                 returnResults.appendContentsOf([school])
+            }
+            return returnResults
+        case 2:
+            var returnResults: [Class] = []
+            for object in resultsAsKiiObjects {
+                let classObject = Class(kiiObject: object)
+                returnResults.appendContentsOf([classObject])
             }
             return returnResults
         case 6:
