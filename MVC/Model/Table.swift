@@ -34,8 +34,7 @@ class Table {
         4: "_Comment",
         5: "_Like",
         6: "_Professor",
-        7: "_PostType",
-        8: "_ProfilePicture"
+        7: "_ProfilePicture"
     ]
     let maxQuerySize = 9999
     
@@ -76,6 +75,13 @@ class Table {
             for object in allResults {
                 let school = School(kiiObject: object)
                 returnResults.appendContentsOf([school])
+            }
+            return returnResults
+        case 6:
+            var returnResults: [Professor] = []
+            for object in allResults {
+                let professor = Professor(kiiObject: object)
+                returnResults.appendContentsOf([professor])
             }
             return returnResults
         default: break
@@ -151,6 +157,13 @@ class Table {
             for object in resultsAsKiiObjects {
                 let school = School(kiiObject: object)
                 returnResults.appendContentsOf([school])
+            }
+            return returnResults
+        case 6:
+            var returnResults: [Professor] = []
+            for object in resultsAsKiiObjects {
+                let professor = Professor(kiiObject: object)
+                returnResults.appendContentsOf([professor])
             }
             return returnResults
         default: break
