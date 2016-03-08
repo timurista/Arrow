@@ -61,7 +61,7 @@ class Table {
         // Error handling
         if error != nil {
             print("\(error)")
-            return []
+            return [error!]
         }
         
         // Add results to array
@@ -127,7 +127,7 @@ class Table {
         // Error handling
         if (error != nil) {
             print("\(error)")
-            return []
+            return [error!]
         }
         
         // Add all the results from this query to the total results
@@ -143,7 +143,7 @@ class Table {
             // Error handling
             if (error != nil) {
                 print("\(error)")
-                return []
+                return [error!]
             }
             
             // add these results to the total array
@@ -186,7 +186,7 @@ class Table {
         return resultsAsKiiObjects
     }
     
-    func createObjectWithStringKeys(keyValuePairs: [String:String]){ // Adds an object to the database using key value pairs of type string
+    func createObjectWithStringKeys(keyValuePairs: [String:String]) -> Bool { // Adds an object to the database using key value pairs of type string
         // Create an object with key/value pairs
         let object = table.createObject()
         for (key, value) in keyValuePairs {
@@ -200,11 +200,13 @@ class Table {
         // Error handling
         if error != nil {
             print("\(error)")
-            return
+            return false
         }
+        
+        return true // if no error
     }
     
-    func createObjectWithId(id: String){ // Adds an object to the database using id
+    func createObjectWithId(id: String) -> Bool { // Adds an object to the database using id
         var error: NSError?
         
         // Create an object with key/value pairs
@@ -216,11 +218,13 @@ class Table {
         // Error handling
         if (error != nil) {
             print("\(error)")
-            return
+            return false
         }
+        
+        return true // if no error
     }
     
-    func appendObjectWithStringKeys(keyValuePairs: [String:String], id: String){ // Appends an object in the database with the key value pairs
+    func appendObjectWithStringKeys(keyValuePairs: [String:String], id: String) -> Bool { // Appends an object in the database with the key value pairs
         let URI = "kiicloud://buckets/\((tableNames[0])!)/objects/\(id)"
         let object = KiiObject(URI: URI)
         
@@ -235,7 +239,9 @@ class Table {
         // Error handling
         if error != nil {
             print("\(error)")
-            return
+            return false
         }
+        
+        return true // if no error
     }
 }
