@@ -28,8 +28,8 @@ class School {
     }
     
     // MARK: Functions
-    func addToDatabase() {
+    func addToDatabase(error: NSErrorPointer) {
         let table = Table(type: 1)
-        table.createObjectWithStringKeys(["name": name, "state": state])
+        table.createObjectWithStringKeys(["name": name, "state": state], error: error)
     }
 }

@@ -23,12 +23,12 @@ class Professor {
         school = (schoolObject != nil) ? schoolObject! : School(schoolName: nil, stateAbreviation: nil)
     }
     
-    init(kiiObject: KiiObject) {
+    init(kiiObject: KiiObject, error: NSErrorPointer) {
         firstName = kiiObject.getObjectForKey("firstName") as! String
         lastName = kiiObject.getObjectForKey("lastName") as! String
         let schoolIdentifier = kiiObject.getObjectForKey("school") as! String
         let table = Table(type: 1)
-        let schoolArray = table.getObjectsWithKeyValue(["_id": schoolIdentifier], limit: 1)
+        let schoolArray = table.getObjectsWithKeyValue(["_id": schoolIdentifier], limit: 1, error: error)
         if schoolArray.count != 0 {
             school = schoolArray[0] as! School
         } else {
@@ -38,11 +38,11 @@ class Professor {
     }
     
     // MARK: Functions
-    func addToDatabase() {
+    func addToDatabase(error: NSErrorPointer) {
         let table = Table(type: 6)
         let schoolIdentifier = school.identifier
         if schoolIdentifier != nil {
-            table.createObjectWithStringKeys(["firstName": firstName, "lastName": lastName, "school": schoolIdentifier!])
+            table.createObjectWithStringKeys(["firstName": firstName, "lastName": lastName, "school": schoolIdentifier!], error: error)
         }
     }
 }

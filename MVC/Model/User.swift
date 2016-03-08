@@ -18,21 +18,21 @@ class User {
     var profilePicture: String?
     
     // MARK: Initializers
-    init (userIdentifier: String?) {
+    init (userIdentifier: String?, error: NSErrorPointer) {
         // Get user's KiiObject
         userID = userIdentifier
         let table = Table(type: 0)
         if userIdentifier != nil {
             // Search for user object in user table
-            let userSearch = table.getObjectsWithKeyValue(["_id": userIdentifier!], limit: 1)
-            if userSearch.count == 1 {
+            let userSearch = table.getObjectsWithKeyValue(["_id": userIdentifier!], limit: 1, error: error)
+            if userSearch.count == 1 && error == nil {
                 let user = userSearch[0]
                 
                 // Get user's school
                 let schoolID = user.getObjectForKey("school") as? String
                 let schoolTable = Table(type: 1)
                 if schoolID != nil {
-                    school = (schoolTable.getObjectsWithKeyValue(["_id": schoolID!], limit: 1))[0] as? School
+                    school = (schoolTable.getObjectsWithKeyValue(["_id": schoolID!], limit: 1, error: error))[0] as? School
                 }
                 
                 // Get user's firstName, lastName and profilePicture
