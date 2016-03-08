@@ -23,14 +23,16 @@ class Class {
         professor = (professorObject != nil) ? professorObject! : Professor(firstNameInput: nil, lastNameInput: nil, schoolObject: nil)
     }
     
-    init(kiiObject: KiiObject, error: NSErrorPointer) {
+    init(kiiObject: KiiObject) {
+        var error: NSError?
+        
         // Title
         title = kiiObject.getObjectForKey("title") as! String
         
         // School
         let schoolIdentifier = kiiObject.getObjectForKey("school") as! String
         var table = Table(type: 1)
-        let schoolArray = table.getObjectsWithKeyValue(["_id": schoolIdentifier], limit: 1, error: error)
+        let schoolArray = table.getObjectsWithKeyValue(["_id": schoolIdentifier], limit: 1, error: &error)
         if schoolArray.count != 0 {
             school = schoolArray[0] as! School
         } else {
@@ -40,7 +42,7 @@ class Class {
         // Professor
         let professorIdentifier = kiiObject.getObjectForKey("professor") as! String
         table = Table(type: 6)
-        let professorArray = table.getObjectsWithKeyValue(["_id": professorIdentifier], limit: 1, error: error)
+        let professorArray = table.getObjectsWithKeyValue(["_id": professorIdentifier], limit: 1, error: &error)
         if professorArray.count != 0 {
             professor = professorArray[0] as! Professor
         } else {

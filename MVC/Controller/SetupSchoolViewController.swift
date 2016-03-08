@@ -36,11 +36,13 @@ class SetupSchoolViewController: GenericPickerViewController {
     
     // MARK: Properties
     var stateAbreviation: String = "" // Passed from previous view controller
-    var schoolsInState: [School] { // Must be used off the main thread!!!
+    private var schoolsInState: [School] { // Must be used off the main thread!!!
         get {
             let table = Table(type: 1)
             // Query database for schools with matching state
-            let schools = table.getObjectsWithKeyValue(["state": stateAbreviation], limit: 0)
+            var error: NSError?
+            let schools = table.getObjectsWithKeyValue(["state": stateAbreviation], limit: 0, error: &error)
+            errorHandling(error)
             return schools as! [School]
         }
     }
@@ -86,7 +88,35 @@ class SetupSchoolViewController: GenericPickerViewController {
         dispatch_async(dispatch_get_global_queue(qos, 0)){ () -> Void in
             for school in self.schoolsInState {
                 if school.name == self.selectedValue! {
-                    CurrentUser().setSchool(school)
+                    var error: NSError?
+                    CurrentUser().setSchool(school, error: &error)
+                    self.errorHandling(error)
+                }
+            }
+        }
+    }
+    
+    private func errorHandling(error: NSError?) {
+        dispatch_async(dispatch_get_main_queue()) { () -> Void in
+            if error != nil {
+                print("Error: Code \(error!.code), \(error!.description)")
+                switch error!.code {
+                case 201: // No internet connection alert
+                    let alert = UIAlertController(
+                        title: "Offline",
+                        message: "Please check your internet connection. Then, go back and try again.",
+                        preferredStyle:  UIAlertControllerStyle.Alert
+                    )
+                    alert.addAction(UIAlertAction(
+                        title: "Dismiss",
+                        style: .Cancel)
+                        { (action: UIAlertAction) -> Void in
+                            self.blank = "Error"
+                            self.updateUI([])
+                        }
+                    )
+                    self.presentViewController(alert, animated: true, completion: nil)
+                default: break
                 }
             }
         }
@@ -96,39 +126,41 @@ class SetupSchoolViewController: GenericPickerViewController {
 extension SetupSchoolViewController { // Functionality to allow users to add a school
     
     @IBAction func addButton(sender: UIBarButtonItem) {
-        let addSchool = UIAlertController(
-            title: "Add School",
-            message: "Enter the name of your school.",
-            preferredStyle:  UIAlertControllerStyle.Alert
-        )
-        addSchool.addAction(UIAlertAction(
-            title: "OK",
-            style: .Default)
-            { (action: UIAlertAction) -> Void in
-                // Get school name
-                if let textFieldPointer = addSchool.textFields?.first {
-                    let textField = textFieldPointer as UITextField
-                    if let schoolName = textField.text {
-                        // Add school to database
-                        self.createSchool(schoolName)
+        if pickerList.count > 0 && pickerList[0] != "Error" {
+            let addSchool = UIAlertController(
+                title: "Add School",
+                message: "Enter the name of your school.",
+                preferredStyle:  UIAlertControllerStyle.Alert
+            )
+            addSchool.addAction(UIAlertAction(
+                title: "OK",
+                style: .Default)
+                { (action: UIAlertAction) -> Void in
+                    // Get school name
+                    if let textFieldPointer = addSchool.textFields?.first {
+                        let textField = textFieldPointer as UITextField
+                        if let schoolName = textField.text {
+                            // Add school to database
+                            self.createSchool(schoolName)
+                        }
                     }
                 }
+            )
+            addSchool.addAction(UIAlertAction(
+                title: "Cancel",
+                style: .Cancel)
+                { (action: UIAlertAction) -> Void in
+                    // Do nothing
+                }
+            )
+            addSchool.addTextFieldWithConfigurationHandler { (textField) in
+                textField.placeholder = "School Name"
+                textField.text = ""
+                textField.keyboardType = .ASCIICapable
+                textField.autocapitalizationType = .Words
             }
-        )
-        addSchool.addAction(UIAlertAction(
-            title: "Cancel",
-            style: .Cancel)
-            { (action: UIAlertAction) -> Void in
-                // Do nothing
-            }
-        )
-        addSchool.addTextFieldWithConfigurationHandler { (textField) in
-            textField.placeholder = "School Name"
-            textField.text = ""
-            textField.keyboardType = .ASCIICapable
-            textField.autocapitalizationType = .Words
+            presentViewController(addSchool, animated: true, completion: nil)
         }
-        presentViewController(addSchool, animated: true, completion: nil)
     }
     
     private func createSchool(name: String) {
@@ -155,7 +187,9 @@ extension SetupSchoolViewController { // Functionality to allow users to add a s
                 let qos = Int(QOS_CLASS_USER_INITIATED.rawValue)
                 dispatch_async(dispatch_get_global_queue(qos, 0)){ () -> Void in
                     let newSchool = School(schoolName: name, stateAbreviation: self.stateAbreviation)
-                    newSchool.addToDatabase()
+                    var error: NSError?
+                    newSchool.addToDatabase(&error)
+                    self.errorHandling(error)
                     dispatch_async(dispatch_get_main_queue()) { () -> Void in
                         self.selectedValue = name
                         self.continueButton()

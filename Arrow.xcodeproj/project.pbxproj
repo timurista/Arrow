@@ -26,6 +26,10 @@
 		8A81C90A1C87A41F0040FA6E /* Table.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A81C9001C87A41F0040FA6E /* Table.swift */; };
 		8A81C90B1C87A41F0040FA6E /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A81C9011C87A41F0040FA6E /* User.swift */; };
 		8A81C90C1C87A41F0040FA6E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8A81C9031C87A41F0040FA6E /* Main.storyboard */; };
+		8A8257741C8E1CA000804F87 /* SetupClassesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A8257731C8E1CA000804F87 /* SetupClassesTableViewController.swift */; };
+		8A8257761C8E1F5600804F87 /* Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A8257751C8E1F5600804F87 /* Class.swift */; };
+		8A8257781C8E1FF100804F87 /* Professor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A8257771C8E1FF100804F87 /* Professor.swift */; };
+		8A82577A1C8E2B3600804F87 /* SetupClassesTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A8257791C8E2B3600804F87 /* SetupClassesTableViewCell.swift */; };
 		8ACBA6891C889B6800959B00 /* CurrentUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8ACBA6881C889B6800959B00 /* CurrentUser.swift */; };
 /* End PBXBuildFile section */
 
@@ -51,6 +55,10 @@
 		8A81C9001C87A41F0040FA6E /* Table.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Table.swift; sourceTree = "<group>"; };
 		8A81C9011C87A41F0040FA6E /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		8A81C9031C87A41F0040FA6E /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Main.storyboard; path = ../MVC/View/Main.storyboard; sourceTree = "<group>"; };
+		8A8257731C8E1CA000804F87 /* SetupClassesTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SetupClassesTableViewController.swift; path = MVC/Controller/SetupClassesTableViewController.swift; sourceTree = SOURCE_ROOT; };
+		8A8257751C8E1F5600804F87 /* Class.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Class.swift; path = MVC/Model/Class.swift; sourceTree = SOURCE_ROOT; };
+		8A8257771C8E1FF100804F87 /* Professor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Professor.swift; sourceTree = "<group>"; };
+		8A8257791C8E2B3600804F87 /* SetupClassesTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SetupClassesTableViewCell.swift; sourceTree = "<group>"; };
 		8ACBA6881C889B6800959B00 /* CurrentUser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CurrentUser.swift; sourceTree = "<group>"; };
 		8ACFEE391C741BF800400DFF /* Arrow.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Arrow.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -107,6 +115,8 @@
 				8A81C8F91C87A41F0040FA6E /* GenericPickerViewController.swift */,
 				8A81C8FC1C87A41F0040FA6E /* SetupStateViewController.swift */,
 				8A81C8FB1C87A41F0040FA6E /* SetupSchoolViewController.swift */,
+				8A8257731C8E1CA000804F87 /* SetupClassesTableViewController.swift */,
+				8A8257791C8E2B3600804F87 /* SetupClassesTableViewCell.swift */,
 			);
 			name = Controller;
 			path = ../MVC/Controller;
@@ -120,6 +130,8 @@
 				8ACBA6881C889B6800959B00 /* CurrentUser.swift */,
 				8A81C8FF1C87A41F0040FA6E /* States.swift */,
 				8A81C8FE1C87A41F0040FA6E /* School.swift */,
+				8A8257751C8E1F5600804F87 /* Class.swift */,
+				8A8257771C8E1FF100804F87 /* Professor.swift */,
 			);
 			name = Model;
 			path = ../MVC/Model;
@@ -224,12 +236,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8A8257761C8E1F5600804F87 /* Class.swift in Sources */,
+				8A8257741C8E1CA000804F87 /* SetupClassesTableViewController.swift in Sources */,
+				8A82577A1C8E2B3600804F87 /* SetupClassesTableViewCell.swift in Sources */,
 				8ACBA6891C889B6800959B00 /* CurrentUser.swift in Sources */,
 				8A81C9051C87A41F0040FA6E /* LoginViewController.swift in Sources */,
 				8A81C9081C87A41F0040FA6E /* School.swift in Sources */,
 				8A81C9091C87A41F0040FA6E /* States.swift in Sources */,
 				8A81C9041C87A41F0040FA6E /* GenericPickerViewController.swift in Sources */,
 				8A81C9061C87A41F0040FA6E /* SetupSchoolViewController.swift in Sources */,
+				8A8257781C8E1FF100804F87 /* Professor.swift in Sources */,
 				8A81C90B1C87A41F0040FA6E /* User.swift in Sources */,
 				8A81C9071C87A41F0040FA6E /* SetupStateViewController.swift in Sources */,
 				8A81C90A1C87A41F0040FA6E /* Table.swift in Sources */,

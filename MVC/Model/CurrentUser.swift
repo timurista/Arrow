@@ -11,8 +11,9 @@ import Foundation
 class CurrentUser: User {
     
     // MARK: Initializers
-    init(error: NSErrorPointer) {
-        super.init(userIdentifier: KiiUser.currentUser()?.userID, error: error)
+    init() {
+        var error: NSError?
+        super.init(userIdentifier: KiiUser.currentUser()?.userID, error: &error)
     }
     
     // MARK: Functions

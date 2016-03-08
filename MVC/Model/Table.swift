@@ -56,6 +56,7 @@ class Table {
         
         // Get an array of KiiObjects by querying the bucket
         let results = table.executeQuerySynchronous(allQuery, withError: error, andNext: &nextQuery)
+        if error.memory != nil { return [] }
         
         // Add results to array
         allResults.appendContentsOf(results as! [KiiObject])
@@ -86,7 +87,7 @@ class Table {
             return returnResults
         default: break
         }
-        
+            
         return allResults
     }
     
@@ -116,16 +117,18 @@ class Table {
         // Get an array of KiiObjects by querying the bucket
         var nextQuery : KiiQuery?
         var results = table.executeQuerySynchronous(query, withError: error, andNext: &nextQuery)
+        if error.memory != nil { return [] }
         
         // Add all the results from this query to the total results
         allResults.appendContentsOf(results)
         
-        // if there is more data to retreive
+        // If there is more data to retreive
         if nextQuery != nil {
             var nextQuery2 : KiiQuery?
             
-            // make the next query, storing the results
+            // Make the next query, storing the results
             results = table.executeQuerySynchronous(nextQuery, withError: error, andNext: &nextQuery2)
+            if error.memory != nil { return [] }
             
             // add these results to the total array
             allResults.appendContentsOf(results)
