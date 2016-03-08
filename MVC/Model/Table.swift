@@ -44,7 +44,7 @@ class Table {
     }
     
     // MARK: Functions
-    func getAllObjects() -> NSArray { // Retrieves all objects from a table
+    func getAllObjects(error: NSErrorPointer) -> NSArray { // Retrieves all objects from a table
         // Build "all" query
         let allQuery = KiiQuery(clause: nil)
         
@@ -55,14 +55,7 @@ class Table {
         var allResults = [KiiObject]()
         
         // Get an array of KiiObjects by querying the bucket
-        var error : NSError?
-        let results = table.executeQuerySynchronous(allQuery, withError: &error, andNext: &nextQuery)
-        
-        // Error handling
-        if error != nil {
-            print("\(error)")
-            return [error!]
-        }
+        let results = table.executeQuerySynchronous(allQuery, withError: error, andNext: &nextQuery)
         
         // Add results to array
         allResults.appendContentsOf(results as! [KiiObject])
@@ -97,7 +90,7 @@ class Table {
         return allResults
     }
     
-    func getObjectsWithKeyValue(keyValuePairs: [String:String], var limit: Int) -> NSArray { // Retreives objects from a table that match the given key value pairs
+    func getObjectsWithKeyValue(keyValuePairs: [String:String], var limit: Int, error: NSErrorPointer) -> NSArray { // Retreives objects from a table that match the given key value pairs
         // For "unlimited" query, limit = 0 -> limit of maxQuerySize
         if limit == 0 { limit = maxQuerySize }
         
@@ -122,13 +115,7 @@ class Table {
         
         // Get an array of KiiObjects by querying the bucket
         var nextQuery : KiiQuery?
-        var error : NSError?
-        var results = table.executeQuerySynchronous(query, withError: &error, andNext: &nextQuery)
-        // Error handling
-        if (error != nil) {
-            print("\(error)")
-            return [error!]
-        }
+        var results = table.executeQuerySynchronous(query, withError: error, andNext: &nextQuery)
         
         // Add all the results from this query to the total results
         allResults.appendContentsOf(results)
@@ -138,13 +125,7 @@ class Table {
             var nextQuery2 : KiiQuery?
             
             // make the next query, storing the results
-            results = table.executeQuerySynchronous(nextQuery, withError: &error, andNext: &nextQuery2)
-            
-            // Error handling
-            if (error != nil) {
-                print("\(error)")
-                return [error!]
-            }
+            results = table.executeQuerySynchronous(nextQuery, withError: error, andNext: &nextQuery2)
             
             // add these results to the total array
             allResults.appendContentsOf(results)
@@ -186,7 +167,7 @@ class Table {
         return resultsAsKiiObjects
     }
     
-    func createObjectWithStringKeys(keyValuePairs: [String:String]) -> Bool { // Adds an object to the database using key value pairs of type string
+    func createObjectWithStringKeys(keyValuePairs: [String:String], error: NSErrorPointer) -> Bool { // Adds an object to the database using key value pairs of type string
         // Create an object with key/value pairs
         let object = table.createObject()
         for (key, value) in keyValuePairs {
@@ -194,37 +175,20 @@ class Table {
         }
         
         // Save the object
-        var error : NSError?
-        object.saveSynchronous(&error)
-        
-        // Error handling
-        if error != nil {
-            print("\(error)")
-            return false
-        }
+        object.saveSynchronous(error)
         
         return true // if no error
     }
     
-    func createObjectWithId(id: String) -> Bool { // Adds an object to the database using id
-        var error: NSError?
-        
+    func createObjectWithId(id: String, error: NSErrorPointer) { // Adds an object to the database using id
         // Create an object with key/value pairs
         let object = table.createObjectWithID(id)
         
         // Save the object
-        object.saveAllFieldsSynchronous(true, withError: &error)
-        
-        // Error handling
-        if (error != nil) {
-            print("\(error)")
-            return false
-        }
-        
-        return true // if no error
+        object.saveAllFieldsSynchronous(true, withError: error)
     }
     
-    func appendObjectWithStringKeys(keyValuePairs: [String:String], id: String) -> Bool { // Appends an object in the database with the key value pairs
+    func appendObjectWithStringKeys(keyValuePairs: [String:String], id: String, error: NSErrorPointer) { // Appends an object in the database with the key value pairs
         let URI = "kiicloud://buckets/\((tableNames[0])!)/objects/\(id)"
         let object = KiiObject(URI: URI)
         
@@ -233,15 +197,6 @@ class Table {
         }
         
         // This will append the local key/value pairs with the data that already exists on the server
-        var error : NSError?
-        object.saveSynchronous(&error)
-        
-        // Error handling
-        if error != nil {
-            print("\(error)")
-            return false
-        }
-        
-        return true // if no error
+        object.saveSynchronous(error)
     }
 }
