@@ -12,53 +12,38 @@ class Class {
     
     // MARK: Properties
     var title: String // database: "title"
-    var school: School // database: "school"
-    var professor: Professor // database "professor"
+    var school: String // database: "school"
+    var professor: String // database "professor"
     var identifier: String? //database: "_id", created by database
     
     // MARK: Initializers
-    init(classTitle: String?, schoolObject: School?, professorObject: Professor?) {
+    init(classTitle: String?, schoolID: String?, professorID: String?) {
         title = (classTitle != nil) ? classTitle! : ""
-        school = (schoolObject != nil) ? schoolObject! : School(schoolName: nil, stateAbreviation: nil)
-        professor = (professorObject != nil) ? professorObject! : Professor(firstNameInput: nil, lastNameInput: nil, schoolObject: nil)
+        school = (schoolID != nil) ? schoolID! : ""
+        professor = (professorID != nil) ? professorID! : ""
     }
     
     init(kiiObject: KiiObject) {
-        var error: NSError?
-        
-        // Title
         title = kiiObject.getObjectForKey("title") as! String
-        
-        // School
-        let schoolIdentifier = kiiObject.getObjectForKey("school") as! String
-        var table = Table(type: 1)
-        let schoolArray = table.getObjectsWithKeyValue(["_id": schoolIdentifier], limit: 1, error: &error)
-        if schoolArray.count != 0 {
-            school = schoolArray[0] as! School
-        } else {
-            school = School(schoolName: nil, stateAbreviation: nil)
-        }
-        
-        // Professor
-        let professorIdentifier = kiiObject.getObjectForKey("professor") as! String
-        table = Table(type: 6)
-        let professorArray = table.getObjectsWithKeyValue(["_id": professorIdentifier], limit: 1, error: &error)
-        if professorArray.count != 0 {
-            professor = professorArray[0] as! Professor
-        } else {
-            professor = Professor(firstNameInput: nil, lastNameInput: nil, schoolObject: nil)
-        }
+        school = kiiObject.getObjectForKey("school") as! String
+        professor = kiiObject.getObjectForKey("professor") as! String
         identifier = kiiObject.getObjectForKey("_id") as? String
     }
     
     // MARK: Functions
     func addToDatabase(error: NSErrorPointer) {
         let table = Table(type: 2)
-        let schoolIdentifier = school.identifier
-        let professorIdentifier = professor.identifier
-        if schoolIdentifier != nil && professor.identifier != nil {
-            table.createObjectWithStringKeys(["title": title, "school": schoolIdentifier!, "professor": professorIdentifier!], error: error)
+        table.createObjectWithStringKeys(["title": title, "school": school, "professor": professor], error: error)
+    }
+    
+    func getProfessor(error: NSErrorPointer) -> Professor {
+        let table = Table(type: 6)
+        let kiiObject = KiiObject(URI: table.getURI(professor))
+        kiiObject.refreshSynchronous(error)
+        if error.memory == nil {
+            return Professor(kiiObject: kiiObject)
+        } else {
+            return Professor(firstNameText: nil, lastNameText: nil, schoolID: nil)
         }
     }
-
 }

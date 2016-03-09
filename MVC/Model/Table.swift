@@ -192,7 +192,7 @@ class Table {
     }
     
     func appendObjectWithStringKeys(keyValuePairs: [String:String], id: String, error: NSErrorPointer) { // Appends an object in the database with the key value pairs
-        let URI = "kiicloud://buckets/\((tableNames[0])!)/objects/\(id)"
+        let URI = getURI(id)
         let object = KiiObject(URI: URI)
         
         for (key, value) in keyValuePairs {
@@ -201,5 +201,10 @@ class Table {
         
         // This will append the local key/value pairs with the data that already exists on the server
         object.saveSynchronous(error)
+    }
+    
+    func getURI(id: String) -> String {
+        let URI = "kiicloud://buckets/\((tableNames[tableType])!)/objects/\(id)"
+        return URI
     }
 }

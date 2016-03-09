@@ -30,9 +30,6 @@ class School {
     // MARK: Functions
     func addToDatabase(error: NSErrorPointer) {
         let table = Table(type: 1)
-        let schoolSearch = table.getObjectsWithKeyValue(["name": name], limit: 1, error: error)
-        if schoolSearch == 0 {
-            table.createObjectWithStringKeys(["name": name, "state": state], error: error)
-        }
+        table.createObjectWithStringKeys(["name": name, "state": state], error: error)
     }
 }
