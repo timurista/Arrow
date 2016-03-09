@@ -29,6 +29,8 @@ class SetupSchoolViewController: GenericPickerViewController {
             switch id {
             case "next":
                 setUserSchool()
+                let dvc = segue.destinationViewController as! SetupClassesViewController
+                dvc.schoolName = selectedValue!
             default: break
             }
         }
