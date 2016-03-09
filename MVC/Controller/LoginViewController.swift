@@ -12,10 +12,6 @@ class LoginViewController: UIViewController {
 
     
     // MARK: Overrided Methods
-    override func supportedInterfaceOrientations() -> UIInterfaceOrientationMask { // Only allow portrait orientation for login
-        return UIInterfaceOrientationMask.Portrait
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         if CurrentUser().userID != nil {
