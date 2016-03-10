@@ -53,6 +53,7 @@ class LoginViewController: UIViewController {
         googleButton?.hidden = false
         facebookButton?.hidden = false
         twitterButton?.hidden = false
+        spinner?.stopAnimating()
         spinner?.hidden = true
     }
     
