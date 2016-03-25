@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9532" systemVersion="14F1605" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" initialViewController="01J-lp-oVM">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10116" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" initialViewController="01J-lp-oVM">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9530"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
@@ -19,6 +19,9 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Backgroud" translatesAutoresizingMaskIntoConstraints="NO" id="MVv-mn-IMj">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                            </imageView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Logo-NoCircle" translatesAutoresizingMaskIntoConstraints="NO" id="f7U-cc-Za6">
                                 <rect key="frame" x="225" y="225" width="150" height="150"/>
                                 <constraints>
@@ -27,15 +30,39 @@
                                 </constraints>
                             </imageView>
                         </subviews>
-                        <color key="backgroundColor" red="1" green="0.4392156862745098" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="MVv-mn-IMj" firstAttribute="height" secondItem="Ze5-6b-2t3" secondAttribute="height" id="1Rs-bh-4qA"/>
+                            <constraint firstItem="MVv-mn-IMj" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leading" id="2nY-bL-X5M"/>
                             <constraint firstItem="f7U-cc-Za6" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="7DE-HT-Il5"/>
+                            <constraint firstItem="MVv-mn-IMj" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="Cry-W8-hKe"/>
                             <constraint firstAttribute="trailingMargin" relation="greaterThanOrEqual" secondItem="f7U-cc-Za6" secondAttribute="trailing" constant="20" id="OhQ-pP-LHC"/>
+                            <constraint firstItem="xb3-aO-Qok" firstAttribute="top" secondItem="MVv-mn-IMj" secondAttribute="bottom" id="Ovh-Rd-OPO"/>
                             <constraint firstItem="f7U-cc-Za6" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Ze5-6b-2t3" secondAttribute="leadingMargin" constant="20" id="Thh-YH-PI7"/>
+                            <constraint firstItem="MVv-mn-IMj" firstAttribute="centerY" secondItem="f7U-cc-Za6" secondAttribute="centerY" id="WTa-gq-xHf"/>
+                            <constraint firstItem="MVv-mn-IMj" firstAttribute="centerX" secondItem="f7U-cc-Za6" secondAttribute="centerX" id="aZA-lS-kvg"/>
+                            <constraint firstItem="MVv-mn-IMj" firstAttribute="width" secondItem="Ze5-6b-2t3" secondAttribute="width" id="b2O-Ye-Mxz"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="MVv-mn-IMj" secondAttribute="trailing" constant="-20" id="bPg-o4-vL4"/>
                             <constraint firstItem="xb3-aO-Qok" firstAttribute="top" relation="greaterThanOrEqual" secondItem="f7U-cc-Za6" secondAttribute="bottom" constant="20" id="bsC-f0-KYh"/>
                             <constraint firstItem="f7U-cc-Za6" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="cdK-ja-NwZ"/>
+                            <constraint firstItem="MVv-mn-IMj" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leadingMargin" constant="-20" id="fIW-Ae-0jf"/>
+                            <constraint firstItem="MVv-mn-IMj" firstAttribute="top" secondItem="Llm-lL-Icb" secondAttribute="bottom" constant="-20" id="nNX-VT-Xmw"/>
                             <constraint firstItem="f7U-cc-Za6" firstAttribute="top" relation="greaterThanOrEqual" secondItem="Llm-lL-Icb" secondAttribute="bottom" constant="20" id="nfx-Gk-7hG"/>
+                            <constraint firstItem="MVv-mn-IMj" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="phC-Zg-jt1"/>
+                            <constraint firstItem="MVv-mn-IMj" firstAttribute="bottom" secondItem="xb3-aO-Qok" secondAttribute="top" id="tCY-d6-uPl"/>
                         </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="2nY-bL-X5M"/>
+                                <exclude reference="WTa-gq-xHf"/>
+                                <exclude reference="aZA-lS-kvg"/>
+                                <exclude reference="bPg-o4-vL4"/>
+                                <exclude reference="fIW-Ae-0jf"/>
+                                <exclude reference="nNX-VT-Xmw"/>
+                                <exclude reference="tCY-d6-uPl"/>
+                                <exclude reference="Ovh-Rd-OPO"/>
+                            </mask>
+                        </variation>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iYj-Kq-Ea1" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -44,6 +71,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="Logo-NoCircle" width="295" height="295"/>
+        <image name="Backgroud" width="886" height="886"/>
+        <image name="Logo-NoCircle" width="886" height="886"/>
     </resources>
 </document>
