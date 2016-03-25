@@ -34,7 +34,8 @@ class Table {
         4: "_Comment",
         5: "_Like",
         6: "_Professor",
-        7: "_ProfilePicture"
+        7: "_ProfilePicture",
+        8: "_Enrollment"
     ]
     let maxQuerySize = 9999
     
@@ -91,9 +92,10 @@ class Table {
         return allResults
     }
     
-    func getObjectsWithKeyValue(keyValuePairs: [String:String], var limit: Int, error: NSErrorPointer) -> NSArray { // Retreives objects from a table that match the given key value pairs
+    func getObjectsWithKeyValue(keyValuePairs: [String:String], limit: Int, error: NSErrorPointer) -> NSArray { // Retreives objects from a table that match the given key value pairs
         // For "unlimited" query, limit = 0 -> limit of maxQuerySize
-        if limit == 0 { limit = maxQuerySize }
+        var queryLimit = limit
+        if queryLimit == 0 { queryLimit = maxQuerySize }
         
         // Set up the clauses
         var clauses: [KiiClause] = []
@@ -107,7 +109,7 @@ class Table {
         
         // Build the query
         let query = KiiQuery(clause: totalClause)
-        query.limit = Int32(limit)
+        query.limit = Int32(queryLimit)
         
         // if all the results can't be returned in one pass
         // using the given criteria. This will be pre-configured

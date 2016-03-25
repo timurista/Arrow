@@ -26,7 +26,8 @@ class GenericPickerViewController: UIViewController, UIPickerViewDataSource, UIP
         
         // MARK: Functions
     
-        func updateUI(var list: [String]) {
+        func updateUI(withList: [String]) {
+            var list = withList
             list.append(blank)
             pickerList = list
             pickerList.sortInPlace()

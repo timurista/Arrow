@@ -43,6 +43,15 @@ class CurrentUser: User {
         KiiUser.currentUser()?.refreshSynchronous(error)
     }
     
+    func enrollInClass(classID: String, error: NSErrorPointer) {
+        if userID != nil {
+            let table = Table(type: 8)
+            if table.getObjectsWithKeyValue(["user": userID!, "class": classID], limit: 1, error: error).count == 0 {
+                table.createObjectWithStringKeys(["user": userID!, "class": classID], error: error)
+            }
+        }
+    }
+    
     func logOut() {
         KiiUser.logOut()
     }

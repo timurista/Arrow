@@ -11,29 +11,34 @@ import UIKit
 class SetupClassesViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
     // MARK: Overrided Methods
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
         refresh()
     }
     
-    // MARK: Properties
-    var schoolName: String = ""// Passed from previous view controller
-    private var school: School {
-        get {
-            let table = Table(type: 1)
-            var error: NSError?
-            let schoolSearch = table.getObjectsWithKeyValue(["name": schoolName], limit: 1, error: &error)
-            if schoolSearch.count == 1 {
-                return schoolSearch[0] as! School
-            } else {
-                return School(schoolName: nil, stateAbreviation: nil)
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if let id = segue.identifier {
+            switch id {
+            case "addClass":
+                let dvc = segue.destinationViewController as! UINavigationController
+                let ultimateDVC = dvc.topViewController as! AddClassViewController
+                ultimateDVC.school = school
+            case "next":
+                enroll()
+            default: break
             }
         }
     }
+    
+    // MARK: Properties
+    var schoolName: String = "" // Passed from previous view controller
+    var classToAdd: Class = Class(classTitle: nil, schoolID: nil, professorID: nil) // Passed from add class view controller
+    private var school: School = School(schoolName: nil, stateAbreviation: nil)
     private var classes: [[AnyObject]] = [] // follows the format[classObject: Class, professor: Professor, selected: Bool]
     
     @IBOutlet weak var spinner: UIActivityIndicatorView!
     @IBOutlet weak var tableView: UITableView!
+
     
     // MARK: Functions
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -77,24 +82,47 @@ class SetupClassesViewController: UIViewController, UITableViewDelegate, UITable
         return cell
     }
     
+    private func setSchoolObject() {
+        let table = Table(type: 1)
+        var error: NSError?
+        let schoolSearch = table.getObjectsWithKeyValue(["name": self.schoolName], limit: 1, error: &error)
+        if schoolSearch.count == 1 {
+            self.school = schoolSearch[0] as! School
+        }
+    }
+    
     private func refresh() { // Query database for classes
         suspendUI()
         let qos = Int(QOS_CLASS_USER_INITIATED.rawValue)
         dispatch_async(dispatch_get_global_queue(qos, 0)){ () -> Void in
             var error: NSError?
             
+            // Add new class if necessary
+            if self.classToAdd.title != "" {
+                self.classToAdd.addToDatabase(&error)
+                self.classToAdd = Class(classTitle: nil, schoolID: nil, professorID: nil)
+            }
+            self.errorHandling(error)
+            
             // Fill classes array
-            let schoolIdentifier = self.school.identifier
-            if schoolIdentifier != nil {
+            if self.school.identifier == nil {
+                self.setSchoolObject()
+            }
+            if self.school.identifier != nil {
                 let table = Table(type: 2)
-                var classSearch = table.getObjectsWithKeyValue(["school": schoolIdentifier!], limit: 0, error: &error) as [AnyObject]
-                classSearch.sortInPlace { ($0 as! Class).title.compare(($1 as! Class).title) == .OrderedAscending }
-                self.classes.removeAll()
+                let classSearch = table.getObjectsWithKeyValue(["school": self.school.identifier!], limit: 0, error: &error) as [AnyObject]
+                // self.classes.removeAll()
                 for object in classSearch {
+                    var shouldAdd = true
                     let classObject = object as! Class
                     let professor = classObject.getProfessor(&error)
-                    self.classes.append([classObject, professor, false])
+                    for existingObject in self.classes {
+                        let existingClassObject = existingObject[0] as! Class
+                        if classObject.identifier == existingClassObject.identifier { shouldAdd = false }
+                    }
+                    if shouldAdd { self.classes.append([classObject, professor, false]) }
                 }
+                self.classes.sortInPlace { ($0[0] as! Class).title.compare(($1[0] as! Class).title) == .OrderedAscending }
             }
             self.errorHandling(error)
             
@@ -106,16 +134,32 @@ class SetupClassesViewController: UIViewController, UITableViewDelegate, UITable
         }
     }
     
-    private func suspendUI(){
+    private func suspendUI() {
         tableView?.hidden = true
         spinner?.hidden = false
         spinner?.startAnimating()
     }
     
-    private func updateUI(){
+    private func updateUI() {
         spinner?.stopAnimating()
         spinner?.hidden = true
         tableView?.hidden = false
+    }
+    
+    private func enroll() {
+        var error: NSError?
+        let qos = Int(QOS_CLASS_USER_INITIATED.rawValue)
+        dispatch_async(dispatch_get_global_queue(qos, 0)){ () -> Void in
+            for array in self.classes {
+                let classObject = array[0] as! Class
+                if array[2] as! Bool {
+                    if let classIdentifier = classObject.identifier {
+                        CurrentUser().enrollInClass(classIdentifier, error: &error)
+                    }
+                }
+            }
+        }
+        errorHandling(error)
     }
     
     private func errorHandling(error: NSError?) {
@@ -155,4 +199,19 @@ class SetupClassesViewController: UIViewController, UITableViewDelegate, UITable
             }
         }
     }
+}
+
+extension SetupClassesViewController { // Functionality to allow users to add a class
+    
+    override func shouldPerformSegueWithIdentifier(identifier: String, sender: AnyObject?) -> Bool {
+        if identifier == "addClass" && school.identifier == nil { return false }
+        return true
+    }
+    
+    @IBAction func addButton(sender: UIBarButtonItem) {
+        performSegueWithIdentifier("addClass", sender: self)
+    }
+    @IBAction func didAddClass(segue: UIStoryboardSegue) {}
+    @IBAction func cancelAddClass(segue: UIStoryboardSegue) {}
+    
 }
