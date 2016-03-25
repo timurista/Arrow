@@ -37,8 +37,8 @@ class LoginViewController: UIViewController {
     @IBOutlet weak var googleButton: UIButton!
     @IBOutlet weak var facebookButton: UIButton!
     @IBOutlet weak var twitterButton: UIButton!
-    @IBAction func logOut(segue: UIStoryboardSegue) {}
     @IBOutlet weak var spinner: UIActivityIndicatorView!
+    @IBAction func logOut(segue: UIStoryboardSegue) {}
 
     // MARK: Functions
     private func suspendUI() {
