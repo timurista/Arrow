@@ -86,6 +86,13 @@ class Table {
                 returnResults.appendContentsOf([professor])
             }
             return returnResults
+        case 8:
+            var returnResults: [Enrollment] = []
+            for object in allResults {
+                let enrollment = Enrollment(kiiObject: object)
+                returnResults.appendContentsOf([enrollment])
+            }
+            return returnResults
         default: break
         }
             
@@ -166,6 +173,13 @@ class Table {
                 returnResults.appendContentsOf([professor])
             }
             return returnResults
+        case 8:
+            var returnResults: [Enrollment] = []
+            for object in resultsAsKiiObjects {
+                let enrollment = Enrollment(kiiObject: object)
+                returnResults.appendContentsOf([enrollment])
+            }
+            return returnResults
         default: break
         }
         
@@ -186,7 +200,7 @@ class Table {
     }
     
     func createObjectWithId(id: String, error: NSErrorPointer) { // Adds an object to the database using id
-        // Create an object with key/value pairs
+        // Create an object with id
         let object = table.createObjectWithID(id)
         
         // Save the object

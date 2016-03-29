@@ -35,4 +35,8 @@ class Professor {
         let table = Table(type: 6)
         table.createObjectWithStringKeys(["firstName": firstName, "lastName": lastName, "school": school], error: error)
     }
+    
+    func getName() -> String {
+        return (firstName != "" && lastName != "") ? (lastName + ", " + firstName) : ""
+    }
 }

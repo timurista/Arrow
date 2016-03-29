@@ -22,8 +22,9 @@ class CurrentUser: User {
             let objectID = userID!
             let table = Table(type: 0)
             let userSearch = table.getObjectsWithKeyValue(["_id": objectID], limit: 1, error: error)
-            if userSearch.count == 0 && error == nil {
+            if userSearch.count == 0 {
                 table.createObjectWithId(objectID, error: error)
+                refresh(error)
             }
         }
     }
@@ -36,6 +37,14 @@ class CurrentUser: User {
             // Append user to add school
             let table = Table(type: 0)
              table.appendObjectWithStringKeys(["school": schoolID], id: userID!, error: error)
+        }
+    }
+    
+    func setName(firstName: String, lastName: String, error: NSErrorPointer) {
+        if userID != nil {
+            // Append user to add name
+            let table = Table(type: 0)
+            table.appendObjectWithStringKeys(["firstName": firstName, "lastName": lastName], id: userID!, error: error)
         }
     }
     

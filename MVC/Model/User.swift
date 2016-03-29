@@ -25,7 +25,7 @@ class User {
         if userIdentifier != nil {
             // Search for user object in user table
             let userSearch = table.getObjectsWithKeyValue(["_id": userIdentifier!], limit: 1, error: error)
-            if userSearch.count == 1 && error == nil {
+            if userSearch.count == 1 {
                 let user = userSearch[0]
                 
                 // Get user's school

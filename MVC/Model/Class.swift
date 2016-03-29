@@ -14,6 +14,7 @@ class Class {
     var title: String // database: "title"
     var school: String // database: "school"
     var professor: String // database "professor"
+    var numberOfMembers: Int
     var identifier: String? //database: "_id", created by database
     
     // MARK: Initializers
@@ -21,6 +22,7 @@ class Class {
         title = (classTitle != nil) ? classTitle! : ""
         school = (schoolID != nil) ? schoolID! : ""
         professor = (professorID != nil) ? professorID! : ""
+        numberOfMembers = 0
     }
     
     init(kiiObject: KiiObject) {
@@ -28,6 +30,14 @@ class Class {
         school = kiiObject.getObjectForKey("school") as! String
         professor = kiiObject.getObjectForKey("professor") as! String
         identifier = kiiObject.getObjectForKey("_id") as? String
+        if identifier != nil {
+            var error: NSError?
+            let table = Table(type: 8)
+            let results = table.getObjectsWithKeyValue(["class": identifier!], limit: 0, error: &error)
+            numberOfMembers = results.count
+        } else {
+            numberOfMembers = 0
+        }
     }
     
     // MARK: Functions
