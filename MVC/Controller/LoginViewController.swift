@@ -97,8 +97,9 @@ class LoginViewController: UIViewController {
     
     private func shouldLoadSetup() -> Bool { // Determine if user setup should be run
         if CurrentUser().school == nil { return true }
-        if CurrentUser().school?.name == "" { return true }
-        return true // !!!!For Testing!!!!
+        if CurrentUser().firstName == nil { return true }
+        if CurrentUser().lastName == nil {return true }
+        return false
     }
     
     private func errorHandling(error: NSError?) {
@@ -120,7 +121,19 @@ class LoginViewController: UIViewController {
                 )
                 self.presentViewController(alert, animated: true, completion: nil)
             case 320:
-                self.resetUI()
+                let alert = UIAlertController(
+                    title: "Something went wrong",
+                    message: "Please try again.",
+                    preferredStyle:  UIAlertControllerStyle.Alert
+                )
+                alert.addAction(UIAlertAction(
+                    title: "Dismiss",
+                    style: .Cancel)
+                { (action: UIAlertAction) -> Void in
+                    self.resetUI()
+                    }
+                )
+                self.presentViewController(alert, animated: true, completion: nil)
             default: break
             }
         }
