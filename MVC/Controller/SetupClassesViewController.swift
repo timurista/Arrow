@@ -38,6 +38,7 @@ class SetupClassesViewController: UIViewController, UITableViewDelegate, UITable
     
     @IBOutlet weak var spinner: UIActivityIndicatorView!
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var continueButton: UIButton!
 
     
     // MARK: Functions
@@ -70,7 +71,7 @@ class SetupClassesViewController: UIViewController, UITableViewDelegate, UITable
         } else {
             cell.textLabel?.text = (classes[indexPath.row][0] as! Class).title
             let professor = classes[indexPath.row][1] as! Professor
-            let professorName: String =  (professor.firstName != "" && professor.lastName != "") ? (professor.lastName + ", " + professor.firstName) : ""
+            let professorName: String = professor.getName()
             cell.detailTextLabel?.text = professorName
             
             if classes[indexPath.row][2] as! Bool == true {
@@ -82,7 +83,21 @@ class SetupClassesViewController: UIViewController, UITableViewDelegate, UITable
         return cell
     }
     
-    private func setSchoolObject() {
+    private func suspendUI() {
+        tableView?.hidden = true
+        continueButton?.hidden = true
+        spinner?.hidden = false
+        spinner?.startAnimating()
+    }
+    
+    private func updateUI() {
+        spinner?.stopAnimating()
+        spinner?.hidden = true
+        tableView?.hidden = false
+        continueButton?.hidden = false
+    }
+    
+    private func setSchoolObject() { // Creates school object from the school ID passed from previous view
         let table = Table(type: 1)
         var error: NSError?
         let schoolSearch = table.getObjectsWithKeyValue(["name": self.schoolName], limit: 1, error: &error)
@@ -111,7 +126,6 @@ class SetupClassesViewController: UIViewController, UITableViewDelegate, UITable
             if self.school.identifier != nil {
                 let table = Table(type: 2)
                 let classSearch = table.getObjectsWithKeyValue(["school": self.school.identifier!], limit: 0, error: &error) as [AnyObject]
-                // self.classes.removeAll()
                 for object in classSearch {
                     var shouldAdd = true
                     let classObject = object as! Class
@@ -134,19 +148,7 @@ class SetupClassesViewController: UIViewController, UITableViewDelegate, UITable
         }
     }
     
-    private func suspendUI() {
-        tableView?.hidden = true
-        spinner?.hidden = false
-        spinner?.startAnimating()
-    }
-    
-    private func updateUI() {
-        spinner?.stopAnimating()
-        spinner?.hidden = true
-        tableView?.hidden = false
-    }
-    
-    private func enroll() {
+    private func enroll() { // Creates an enrollment in the database
         var error: NSError?
         let qos = Int(QOS_CLASS_USER_INITIATED.rawValue)
         dispatch_async(dispatch_get_global_queue(qos, 0)){ () -> Void in
@@ -183,8 +185,8 @@ class SetupClassesViewController: UIViewController, UITableViewDelegate, UITable
                     self.presentViewController(alert, animated: true, completion: nil)
                 default: // Error alert
                     let alert = UIAlertController(
-                        title: "Error",
-                        message: "Something went wrong. Error \(error!.code)",
+                        title: "Error \(error!.code)",
+                        message: "Something went wrong. Please go back and try again.",
                         preferredStyle:  UIAlertControllerStyle.Alert
                     )
                     alert.addAction(UIAlertAction(
