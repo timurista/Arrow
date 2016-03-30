@@ -62,6 +62,11 @@ class CurrentUser: User {
     }
     
     func logOut() {
+        let defaults = NSUserDefaults.standardUserDefaults()
+        let userDefaultsKeys = ["myClassesArray", "userSchoolID"]
+        for key in userDefaultsKeys {
+            defaults.removeObjectForKey(key)
+        }
         KiiUser.logOut()
     }
 }
