@@ -1221,7 +1221,6 @@
                     </navigationItem>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <connections>
-                        <outlet property="addProfessorButton" destination="THT-TW-GkS" id="2ng-MV-P7s"/>
                         <outlet property="bigSpinner" destination="U0Y-7w-9rx" id="KUk-mX-z8p"/>
                         <outlet property="button" destination="THT-TW-GkS" id="BMB-vH-22A"/>
                         <outlet property="courseTitleTextField" destination="Huk-In-5Tk" id="ar4-Km-Rpk"/>
@@ -1399,6 +1398,12 @@
                             <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="o1t-I2-8lv">
                                 <rect key="frame" x="290" y="290" width="20" height="20"/>
                             </activityIndicatorView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Saving" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mXE-Q5-kTi">
+                                <rect key="frame" x="274.5" y="318" width="51.5" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Select Classes to Add:" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rkP-nv-1Qi">
                                 <rect key="frame" x="169" y="84" width="262" height="33"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleTitle1"/>
@@ -1452,6 +1457,8 @@
                             <constraint firstItem="rkP-nv-1Qi" firstAttribute="top" secondItem="TXG-lq-Dza" secondAttribute="bottom" constant="20" id="T5X-kR-yDi"/>
                             <constraint firstItem="DOc-Pd-4cK" firstAttribute="top" secondItem="VID-WJ-3ox" secondAttribute="bottom" constant="8" id="Unf-Rm-Tbh"/>
                             <constraint firstItem="o1t-I2-8lv" firstAttribute="centerY" secondItem="hJ3-gd-ZFE" secondAttribute="centerY" id="Xbi-FS-YDi"/>
+                            <constraint firstItem="mXE-Q5-kTi" firstAttribute="top" secondItem="o1t-I2-8lv" secondAttribute="bottom" constant="8" symbolic="YES" id="YOg-Dh-R9B"/>
+                            <constraint firstItem="mXE-Q5-kTi" firstAttribute="centerX" secondItem="o1t-I2-8lv" secondAttribute="centerX" id="eMU-7z-gvu"/>
                             <constraint firstItem="9mI-RD-gPc" firstAttribute="top" secondItem="VID-WJ-3ox" secondAttribute="bottom" id="iHE-aa-a59"/>
                             <constraint firstItem="rkP-nv-1Qi" firstAttribute="centerX" secondItem="hJ3-gd-ZFE" secondAttribute="centerX" id="nwb-ka-tUH"/>
                             <constraint firstAttribute="trailingMargin" secondItem="VID-WJ-3ox" secondAttribute="trailing" constant="-20" id="reZ-da-sQB"/>
@@ -1474,22 +1481,24 @@
                         </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" systemItem="save" id="Y8I-lq-bJ5">
                             <connections>
-                                <segue destination="fIy-6H-hT5" kind="unwind" identifier="save" unwindAction="unwindToMyClasses:" id="28Y-Pd-bKk"/>
+                                <action selector="saveButton:" destination="mFh-8A-wba" id="2AH-1U-Hbi"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="bottomButton" destination="DOc-Pd-4cK" id="c1s-tE-w6e"/>
+                        <outlet property="savingText" destination="mXE-Q5-kTi" id="ols-iT-Afi"/>
                         <outlet property="spinner" destination="o1t-I2-8lv" id="zdV-L1-KSb"/>
                         <outlet property="tableView" destination="VID-WJ-3ox" id="jfQ-5Q-Mtk"/>
                         <segue destination="ACt-8T-axL" kind="show" identifier="addClass" id="SqA-Lj-Wbf"/>
+                        <segue destination="fIy-6H-hT5" kind="unwind" identifier="save" unwindAction="unwindToMyClasses:" id="tWX-a2-EL2"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="9B1-hA-Bny" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="fIy-6H-hT5" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="-757" y="-1010"/>
+            <point key="canvasLocation" x="-663" y="-1049"/>
         </scene>
         <!--Create New Class-->
         <scene sceneID="99O-Rc-QOJ">

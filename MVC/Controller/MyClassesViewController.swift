@@ -93,7 +93,7 @@ class MyClassesViewController: UIViewController, UITableViewDelegate, UITableVie
         }
     }
     
-    private func suspendUI() {
+    func suspendUI() {
         display.removeAll()
         tableView.reloadData()
         spinner?.hidden = false

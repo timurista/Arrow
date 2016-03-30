@@ -19,14 +19,17 @@ class SetupClassesViewController: UIViewController, UITableViewDelegate, UITable
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
+        savingText?.hidden = true
         refresh()
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if let id = segue.identifier {
             switch id {
-            case "next": fallthrough
-            case "save": enroll()
+            case "next": enroll()
+            case "save":
+                let dvc = segue.destinationViewController as! MyClassesViewController
+                dvc.suspendUI()
             default: break
             }
         }
@@ -42,6 +45,18 @@ class SetupClassesViewController: UIViewController, UITableViewDelegate, UITable
     @IBOutlet weak var spinner: UIActivityIndicatorView!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var bottomButton: UIButton!
+    @IBOutlet weak var savingText: UILabel!
+    @IBAction func saveButton(sender: UIBarButtonItem) {
+        suspendUI()
+        savingText?.hidden = false
+        let qos = Int(QOS_CLASS_USER_INITIATED.rawValue)
+        dispatch_async(dispatch_get_global_queue(qos, 0)){ () -> Void in
+            self.enroll()
+            dispatch_async(dispatch_get_main_queue()){ () -> Void in
+                self.performSegueWithIdentifier("save", sender: self)
+            }
+        }
+    }
     
     // MARK: Functions
     private func refresh() { // Query database for classes
@@ -83,13 +98,10 @@ class SetupClassesViewController: UIViewController, UITableViewDelegate, UITable
     }
     
     private func enroll() { // Creates an enrollment in the database
-        let qos = Int(QOS_CLASS_USER_INITIATED.rawValue)
-        dispatch_async(dispatch_get_global_queue(qos, 0)){ () -> Void in
-            for array in self.display {
-                if array[1] as! Bool {
-                    if let classIdentifier = (array[0] as! Class).identifier {
-                        CurrentUser().enrollInClass(classIdentifier, error: &self.error)
-                    }
+        for array in self.display {
+            if array[1] as! Bool {
+                if let classIdentifier = (array[0] as! Class).identifier {
+                    CurrentUser().enrollInClass(classIdentifier, error: &self.error)
                 }
             }
         }
