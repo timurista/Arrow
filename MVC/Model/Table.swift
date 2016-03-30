@@ -223,4 +223,31 @@ class Table {
         let URI = "kiicloud://buckets/\((tableNames[tableType])!)/objects/\(id)"
         return URI
     }
+    
+    func deleteObjectWithStringKeys(keyValuePairs: [String:String], error: NSErrorPointer) {
+        
+        // Set up the clauses
+        var clauses: [KiiClause] = []
+        for (key, value) in keyValuePairs {
+            let clause = KiiClause.equals(key, value: value)
+            clauses.append(clause)
+        }
+        
+        // Combine the clauses
+        let totalClause = KiiClause.andClauses(clauses)
+        
+        // Build the query
+        let query = KiiQuery(clause: totalClause)
+        query.limit = Int32(1)
+        
+        // Get an array of KiiObjects by querying the bucket
+        var nextQuery : KiiQuery?
+        let results = table.executeQuerySynchronous(query, withError: error, andNext: &nextQuery)
+        
+        // Delete KiiObject
+        if results.count != 0 {
+            let object = results[0] as! KiiObject
+            object.deleteSynchronous(error)
+        }
+    }
 }
