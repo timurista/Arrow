@@ -126,8 +126,8 @@
 				8AD5E9101C8F56E7009D387D /* SetupClassesViewController.swift */,
 				8A4173991C91D61200837ECA /* AddClassViewController.swift */,
 				8AB6994B1CA59E090037483B /* SetupUserProfileViewController.swift */,
-				8A3A7E121CAB0B7800164A1A /* MyClassesViewController.swift */,
 				8A8B0FB71CAAE38F00804087 /* MyClassesTableViewCell.swift */,
+				8A3A7E121CAB0B7800164A1A /* MyClassesViewController.swift */,
 			);
 			name = Controller;
 			path = ../MVC/Controller;
