@@ -18,6 +18,7 @@ class AddClassViewController: GenericPickerViewController, UITextFieldDelegate {
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         getProfessorNames()
+        bigSpinner?.hidden = true
     }
     
     override func updateUI(list: [String]) {
@@ -28,49 +29,53 @@ class AddClassViewController: GenericPickerViewController, UITextFieldDelegate {
         spinner?.stopAnimating()
     }
     
-    override func shouldPerformSegueWithIdentifier(identifier: String, sender: AnyObject?) -> Bool {
-        switch identifier {
-        case "didAddClass":
-            if selectedValue == nil || courseTitleTextField.text == nil { return false }
-            if courseTitleTextField.text == "" { return false }
-        default: break
-        }
-        return true
-    }
+    // MARK: Properties
+    var professors: [Professor] = []
+    private let defaults = NSUserDefaults.standardUserDefaults()
+    private let userDefaultsKey = "userSchoolID"
+    private var schoolID: String { get { if let id = defaults.stringForKey(userDefaultsKey) { return id } else { return "" } } }
+    private var error: NSError? { didSet{ self.errorHandling(error) } }
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if let id = segue.identifier {
-            switch id {
-            case "didAddClass":
-                courseTitleTextField.resignFirstResponder()
-                let dvc = segue.destinationViewController as! SetupClassesViewController
-                if let schoolID = school.identifier {
-                    if let courseTitle = courseTitleTextField.text {
-                        for professor in self.professors {
-                            let professorName: String =  (professor.firstName != "" && professor.lastName != "") ? (professor.lastName + ", " + professor.firstName) : ""
-                            if professorName == self.selectedValue! {
-                                dvc.classToAdd = Class(classTitle: courseTitle, schoolID: schoolID, professorID: professor.identifier)
-                            }
+    @IBOutlet weak var courseTitleTextField: UITextField!
+    @IBOutlet weak var bigSpinner: UIActivityIndicatorView!
+    @IBOutlet weak var spinner: UIActivityIndicatorView!
+    @IBOutlet weak var textLabelOne: UILabel!
+    @IBOutlet weak var textLabelTwo: UILabel!
+    @IBOutlet weak var button: UIButton!
+    @IBAction func dismiss(sender: UITapGestureRecognizer) { courseTitleTextField.resignFirstResponder() }
+    @IBAction func save(sender: UIBarButtonItem) {
+        if let courseTitle = courseTitleTextField.text {
+            if selectedValue != nil && courseTitle != "" {
+                savingUI()
+                let qos = Int(QOS_CLASS_USER_INITIATED.rawValue)
+                dispatch_async(dispatch_get_global_queue(qos, 0)){ () -> Void in
+                    for professor in self.professors {
+                        let professorName: String =  (professor.firstName != "" && professor.lastName != "") ? (professor.lastName + ", " + professor.firstName) : ""
+                        if professorName == self.selectedValue! {
+                            let classObject = Class(classTitle: courseTitle, schoolID: self.schoolID, professorID: professor.identifier)
+                            classObject.addToDatabase(&self.error)
                         }
                     }
+                    dispatch_async(dispatch_get_main_queue()) { () -> Void in
+                        self.performSegueWithIdentifier("didAddClass", sender: self)
+                    }
                 }
-            default: break
             }
         }
     }
     
-    // MARK: Properties
-    var school: School = School(schoolName: nil, stateAbreviation: nil) // Passed from previous view controller
-    var professors: [Professor] = []
-    private var error: NSError? { didSet{ self.errorHandling(error) } }
-    
-    @IBOutlet weak var courseTitleTextField: UITextField!
-    @IBOutlet weak var spinner: UIActivityIndicatorView!
-    @IBAction func dismiss(sender: UITapGestureRecognizer) {
-        courseTitleTextField.resignFirstResponder()
+    // MARK: Functions
+    private func savingUI() {
+        picker?.hidden = true
+        button?.hidden = true
+        textLabelOne?.hidden = true
+        textLabelTwo?.hidden = true
+        courseTitleTextField?.resignFirstResponder()
+        courseTitleTextField?.hidden = true
+        bigSpinner?.startAnimating()
+        bigSpinner?.hidden = false
     }
     
-    // MARK: Functions
     private func suspendUI() {
         picker?.hidden = true
         spinner?.startAnimating()
@@ -83,9 +88,9 @@ class AddClassViewController: GenericPickerViewController, UITextFieldDelegate {
         dispatch_async(dispatch_get_global_queue(qos, 0)){ () -> Void in
             // Get professor names from database
             var professorNames: [String] = []
-            if let schoolID = self.school.identifier {
+            if self.schoolID != "" {
                 let table = Table(type: 6)
-                let professorSearch = table.getObjectsWithKeyValue(["school": schoolID], limit: 0, error: &self.error) as! [Professor]
+                let professorSearch = table.getObjectsWithKeyValue(["school": self.schoolID], limit: 0, error: &self.error) as! [Professor]
                 for professor in professorSearch {
                     self.professors.append(professor)
                     let professorName: String =  (professor.firstName != "" && professor.lastName != "") ? (professor.lastName + ", " + professor.firstName) : ""
@@ -151,7 +156,7 @@ class AddClassViewController: GenericPickerViewController, UITextFieldDelegate {
 }
 
 extension AddClassViewController { // Functionality to allow users to add a professor
-    
+
     @IBAction func addProfessor(sender: UIButton) {
         if pickerList.count > 0 && pickerList[0] != "Error" {
             let addProfessor = UIAlertController(
@@ -163,7 +168,6 @@ extension AddClassViewController { // Functionality to allow users to add a prof
                 title: "OK",
                 style: .Default)
                 { (action: UIAlertAction) -> Void in
-                    // Get school name
                     if let textFieldPointer = addProfessor.textFields?.first {
                         let textField = textFieldPointer as UITextField
                         if let professorFirstName = textField.text {
@@ -201,7 +205,7 @@ extension AddClassViewController { // Functionality to allow users to add a prof
     }
     
     private func createProfessor(firstName: String, lastName: String) {
-        if self.school.identifier != nil {
+        if self.schoolID != "" {
             if firstName != "" && lastName != "" {
                 // Remove all other characters
                 var components = firstName.componentsSeparatedByCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
@@ -222,7 +226,7 @@ extension AddClassViewController { // Functionality to allow users to add a prof
                 if !duplicate {
                     let qos = Int(QOS_CLASS_USER_INITIATED.rawValue)
                     dispatch_async(dispatch_get_global_queue(qos, 0)){ () -> Void in
-                        let newProfessor = Professor(firstNameText: firstName, lastNameText: lastName, schoolID: self.school.identifier)
+                        let newProfessor = Professor(firstNameText: firstName, lastNameText: lastName, schoolID: self.schoolID)
                         newProfessor.addToDatabase(&self.error)
                         dispatch_async(dispatch_get_main_queue()) { () -> Void in
                             self.getProfessorNames()

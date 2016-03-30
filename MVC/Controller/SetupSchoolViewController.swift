@@ -22,36 +22,21 @@ class SetupSchoolViewController: GenericPickerViewController {
         selectedValue = nil
         picker?.hidden = false
         spinner?.stopAnimating()
-    }
-    
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if let id = segue.identifier {
-            switch id {
-            case "next":
-                setUserSchool()
-                let dvc = segue.destinationViewController as! SetupClassesViewController
-                dvc.schoolName = selectedValue!
-            default: break
-            }
-        }
+        button?.hidden = false
     }
     
     // MARK: Properties
     var stateAbreviation: String = "" // Passed from previous view controller
-    private var schoolsInState: [School] { // Must be used off the main thread!!!
-        get {
-            let table = Table(type: 1)
-            // Query database for schools with matching state
-            let schools = table.getObjectsWithKeyValue(["state": stateAbreviation], limit: 0, error: &error)
-            return schools as! [School]
-        }
-    }
+    private var schoolsInState: [School] = []
+    private let defaults = NSUserDefaults.standardUserDefaults()
+    private let userDefaultsKey = "userSchoolID"
     private var error: NSError? { didSet{ self.errorHandling(error) } }
     
     @IBOutlet weak var spinner: UIActivityIndicatorView!
+    @IBOutlet weak var button: UIButton!
     @IBAction func continueButton() {
         if selectedValue != nil {
-            performSegueWithIdentifier("next", sender: self)
+            setUserSchool()
         }
     }
     
@@ -59,6 +44,7 @@ class SetupSchoolViewController: GenericPickerViewController {
     private func suspendUI() {
         picker?.hidden = true
         spinner?.startAnimating()
+        button?.hidden = true
     }
     
     private func getSchoolNames() {
@@ -67,7 +53,9 @@ class SetupSchoolViewController: GenericPickerViewController {
         let qos = Int(QOS_CLASS_USER_INITIATED.rawValue)
         dispatch_async(dispatch_get_global_queue(qos, 0)){ () -> Void in
             var schoolNames: [String] = []
-            // Get schoolNames from schoolsInState array
+            // Query database for schools with matching state
+            let table = Table(type: 1)
+            self.schoolsInState = table.getObjectsWithKeyValue(["state": self.stateAbreviation], limit: 0, error: &self.error) as! [School]
             for school in self.schoolsInState {
                 schoolNames.append(school.name)
             }
@@ -84,13 +72,20 @@ class SetupSchoolViewController: GenericPickerViewController {
         }
     }
     
-    private func setUserSchool() { // Sets the user's school in the database
+    private func setUserSchool() { // Sets the user's school in the database and in NSUserDefaults
+        suspendUI()
         let qos = Int(QOS_CLASS_USER_INITIATED.rawValue)
         dispatch_async(dispatch_get_global_queue(qos, 0)){ () -> Void in
             for school in self.schoolsInState {
                 if school.name == self.selectedValue! {
+                    if let schoolID = school.identifier {
+                        self.defaults.setObject(schoolID, forKey: self.userDefaultsKey)
+                    }
                     CurrentUser().setSchool(school, error: &self.error)
                 }
+            }
+            dispatch_async(dispatch_get_main_queue()) { () -> Void in
+                self.performSegueWithIdentifier("next", sender: self)
             }
         }
     }
@@ -209,4 +204,3 @@ extension SetupSchoolViewController { // Functionality to allow users to add a s
         }
     }
 }
-

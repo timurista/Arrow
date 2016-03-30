@@ -808,9 +808,10 @@
                     </navigationItem>
                     <nil key="simulatedBottomBarMetrics"/>
                     <connections>
+                        <outlet property="button" destination="YCS-KT-V2W" id="Eu6-Jq-tZ1"/>
                         <outlet property="picker" destination="hWf-sV-fLf" id="jm0-kC-KBc"/>
                         <outlet property="spinner" destination="oaH-u1-pYy" id="FFJ-0C-cEk"/>
-                        <segue destination="fWK-jt-24Q" kind="show" identifier="next" id="Pgn-ga-94w"/>
+                        <segue destination="fWK-jt-24Q" kind="show" identifier="next" id="n4O-4M-Kpe"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="MGA-HQ-jPH" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -912,7 +913,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
-                        <outlet property="continueButton" destination="7Ec-uy-F6A" id="0sR-T6-rM5"/>
+                        <outlet property="bottomButton" destination="7Ec-uy-F6A" id="7Pe-DJ-E2U"/>
                         <outlet property="spinner" destination="qdW-Kd-gvH" id="9ks-7Y-3Qj"/>
                         <outlet property="tableView" destination="Rl9-Y3-cmj" id="G9n-94-Yna"/>
                     </connections>
@@ -1085,8 +1086,11 @@
                                 <rect key="frame" x="0.0" y="64" width="600" height="536"/>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HvR-ph-uNL">
-                                <rect key="frame" x="140" y="114.5" width="320" height="435"/>
+                                <rect key="frame" x="140" y="114" width="320" height="435"/>
                                 <subviews>
+                                    <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="U0Y-7w-9rx">
+                                        <rect key="frame" x="150" y="207" width="20" height="20"/>
+                                    </activityIndicatorView>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Select the Professor:" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yLD-YF-wKa">
                                         <rect key="frame" x="39" y="120" width="241.5" height="32.5"/>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleTitle1"/>
@@ -1137,9 +1141,11 @@
                                     <constraint firstItem="c14-b9-E0E" firstAttribute="centerX" secondItem="MOH-34-4Tm" secondAttribute="centerX" id="X5m-2z-d1h"/>
                                     <constraint firstItem="THT-TW-GkS" firstAttribute="top" secondItem="MOH-34-4Tm" secondAttribute="bottom" constant="3" id="ZGB-iC-WgK"/>
                                     <constraint firstItem="THT-TW-GkS" firstAttribute="centerX" secondItem="HvR-ph-uNL" secondAttribute="centerX" id="ZJ9-YE-Rv1"/>
+                                    <constraint firstItem="U0Y-7w-9rx" firstAttribute="centerY" secondItem="HvR-ph-uNL" secondAttribute="centerY" id="a27-yJ-kB4"/>
                                     <constraint firstItem="c14-b9-E0E" firstAttribute="top" secondItem="HvR-ph-uNL" secondAttribute="top" constant="258" id="cfl-su-Rc7"/>
                                     <constraint firstItem="Huk-In-5Tk" firstAttribute="centerX" secondItem="HvR-ph-uNL" secondAttribute="centerX" id="fiI-DJ-bW9"/>
                                     <constraint firstAttribute="trailing" secondItem="MOH-34-4Tm" secondAttribute="trailing" id="j3Q-Iv-hZE"/>
+                                    <constraint firstItem="U0Y-7w-9rx" firstAttribute="centerX" secondItem="HvR-ph-uNL" secondAttribute="centerX" id="jTe-Fr-8bA"/>
                                     <constraint firstItem="MOH-34-4Tm" firstAttribute="leading" secondItem="HvR-ph-uNL" secondAttribute="leading" id="oCa-Ns-EVW"/>
                                     <constraint firstItem="bxz-Ss-MHi" firstAttribute="centerX" secondItem="HvR-ph-uNL" secondAttribute="centerX" id="sBf-Fp-Buy"/>
                                     <constraint firstAttribute="bottom" secondItem="THT-TW-GkS" secondAttribute="bottom" constant="20" symbolic="YES" id="t6S-Tn-gwW"/>
@@ -1209,16 +1215,21 @@
                         </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" systemItem="save" id="cH8-Nh-5be">
                             <connections>
-                                <action selector="saveButton:" destination="xAq-tG-GYG" id="OJi-ZO-gF7"/>
-                                <segue destination="s5l-UE-5Cn" kind="unwind" identifier="didAddClass" unwindAction="addClassReturn:" id="IJH-zh-oou"/>
+                                <action selector="save:" destination="xAq-tG-GYG" id="w9b-8a-Xoh"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <connections>
+                        <outlet property="addProfessorButton" destination="THT-TW-GkS" id="2ng-MV-P7s"/>
+                        <outlet property="bigSpinner" destination="U0Y-7w-9rx" id="KUk-mX-z8p"/>
+                        <outlet property="button" destination="THT-TW-GkS" id="BMB-vH-22A"/>
                         <outlet property="courseTitleTextField" destination="Huk-In-5Tk" id="ar4-Km-Rpk"/>
                         <outlet property="picker" destination="MOH-34-4Tm" id="JXc-jC-NaN"/>
                         <outlet property="spinner" destination="c14-b9-E0E" id="Ooq-f2-oMH"/>
+                        <outlet property="textLabelOne" destination="bxz-Ss-MHi" id="xPI-c7-90A"/>
+                        <outlet property="textLabelTwo" destination="yLD-YF-wKa" id="tWa-Lp-CJ9"/>
+                        <segue destination="s5l-UE-5Cn" kind="unwind" identifier="didAddClass" unwindAction="addClassReturn:" id="3u1-X8-alu"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qRi-qK-XcD" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1398,7 +1409,7 @@
                                 <rect key="frame" x="233" y="518" width="134" height="30"/>
                                 <state key="normal" title="Create a New Class"/>
                                 <connections>
-                                    <segue destination="ACt-8T-axL" kind="show" identifier="addClass" id="Xbc-2a-6A8"/>
+                                    <action selector="newClassButton:" destination="mFh-8A-wba" eventType="touchUpInside" id="Fwh-vp-Y4K"/>
                                 </connections>
                             </button>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsMultipleSelection="YES" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="VID-WJ-3ox">
@@ -1469,9 +1480,10 @@
                     </navigationItem>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
-                        <outlet property="continueButton" destination="DOc-Pd-4cK" id="MBR-ti-ahZ"/>
+                        <outlet property="bottomButton" destination="DOc-Pd-4cK" id="c1s-tE-w6e"/>
                         <outlet property="spinner" destination="o1t-I2-8lv" id="zdV-L1-KSb"/>
                         <outlet property="tableView" destination="VID-WJ-3ox" id="jfQ-5Q-Mtk"/>
+                        <segue destination="ACt-8T-axL" kind="show" identifier="addClass" id="SqA-Lj-Wbf"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="9B1-hA-Bny" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1491,41 +1503,38 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Zyg-VF-gv1">
-                                <rect key="frame" x="0.0" y="64" width="600" height="492"/>
-                            </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Jqe-Gt-rdm">
-                                <rect key="frame" x="140" y="92.5" width="320" height="435"/>
+                                <rect key="frame" x="140" y="82" width="320" height="436"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Select the Professor:" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="E3H-j5-SmD">
-                                        <rect key="frame" x="39" y="120" width="241.5" height="32.5"/>
+                                        <rect key="frame" x="39" y="121" width="242" height="33"/>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleTitle1"/>
                                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Course Title:" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3if-Vw-TUH">
-                                        <rect key="frame" x="86" y="20" width="147.5" height="32.5"/>
+                                        <rect key="frame" x="86" y="20" width="148" height="33"/>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleTitle1"/>
                                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Ex. AP Statistics, CS 101" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="3Qa-Uv-f60">
-                                        <rect key="frame" x="39" y="60" width="241.5" height="30"/>
+                                        <rect key="frame" x="39" y="61" width="242" height="30"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits" autocapitalizationType="words" keyboardType="alphabet" enablesReturnKeyAutomatically="YES"/>
                                     </textField>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IBj-Sy-ZwM">
-                                        <rect key="frame" x="105" y="385" width="110" height="30"/>
+                                        <rect key="frame" x="105" y="386" width="110" height="30"/>
                                         <state key="normal" title="Add a Professor"/>
                                         <connections>
                                             <action selector="addProfessor:" destination="ACt-8T-axL" eventType="touchUpInside" id="xRz-v0-zVW"/>
                                         </connections>
                                     </button>
                                     <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="NNH-Zp-0PD">
-                                        <rect key="frame" x="150" y="264" width="20" height="20"/>
+                                        <rect key="frame" x="150" y="265" width="20" height="20"/>
                                     </activityIndicatorView>
                                     <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="MUa-cB-Jqd">
-                                        <rect key="frame" x="0.0" y="166" width="320" height="216"/>
+                                        <rect key="frame" x="0.0" y="167" width="320" height="216"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="216" id="A4m-AH-BGH"/>
                                         </constraints>
@@ -1564,34 +1573,37 @@
                                     </mask>
                                 </variation>
                             </view>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="qdE-RI-8Zq">
+                                <rect key="frame" x="290" y="290" width="20" height="20"/>
+                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <gestureRecognizers/>
                         <constraints>
+                            <constraint firstItem="qdE-RI-8Zq" firstAttribute="centerY" secondItem="Jqe-Gt-rdm" secondAttribute="centerY" id="14x-d7-qXq"/>
                             <constraint firstItem="Jqe-Gt-rdm" firstAttribute="centerX" secondItem="Bch-Ao-JxT" secondAttribute="centerX" id="5SU-E3-edY"/>
+                            <constraint firstItem="Jqe-Gt-rdm" firstAttribute="top" secondItem="Kcr-tD-NVh" secondAttribute="bottom" constant="28" id="6td-BT-TzT"/>
                             <constraint firstItem="Jqe-Gt-rdm" firstAttribute="top" relation="greaterThanOrEqual" secondItem="Kcr-tD-NVh" secondAttribute="bottom" constant="20" id="A20-Nf-HuP"/>
                             <constraint firstItem="Jqe-Gt-rdm" firstAttribute="centerY" secondItem="Bch-Ao-JxT" secondAttribute="centerY" id="AuT-WS-68x"/>
                             <constraint firstItem="Bqg-BO-GUL" firstAttribute="top" relation="greaterThanOrEqual" secondItem="Jqe-Gt-rdm" secondAttribute="bottom" constant="20" id="BZH-3c-tOI"/>
                             <constraint firstItem="Jqe-Gt-rdm" firstAttribute="centerY" secondItem="Bch-Ao-JxT" secondAttribute="centerY" id="D2w-Q1-Phs"/>
                             <constraint firstAttribute="trailingMargin" secondItem="Jqe-Gt-rdm" secondAttribute="trailing" id="G3R-To-oph"/>
                             <constraint firstItem="Bqg-BO-GUL" firstAttribute="top" secondItem="Jqe-Gt-rdm" secondAttribute="bottom" constant="8" symbolic="YES" id="HLl-5m-Swh"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="Zyg-VF-gv1" secondAttribute="trailing" constant="-20" id="Kj9-Fj-VNV"/>
                             <constraint firstItem="Jqe-Gt-rdm" firstAttribute="centerX" secondItem="Bch-Ao-JxT" secondAttribute="centerX" id="P2s-yy-XCq"/>
+                            <constraint firstItem="Jqe-Gt-rdm" firstAttribute="centerX" secondItem="Bch-Ao-JxT" secondAttribute="centerX" id="PfS-Dr-aXa"/>
                             <constraint firstItem="Jqe-Gt-rdm" firstAttribute="centerY" secondItem="Bch-Ao-JxT" secondAttribute="centerY" priority="750" id="ScP-jh-h68"/>
                             <constraint firstItem="Jqe-Gt-rdm" firstAttribute="centerY" secondItem="Bch-Ao-JxT" secondAttribute="centerY" id="UOO-vo-pKB"/>
-                            <constraint firstItem="Bqg-BO-GUL" firstAttribute="top" secondItem="Zyg-VF-gv1" secondAttribute="bottom" id="Un5-rS-PrA"/>
-                            <constraint firstItem="Jqe-Gt-rdm" firstAttribute="centerX" secondItem="Zyg-VF-gv1" secondAttribute="centerX" id="c1U-uO-FTl"/>
                             <constraint firstItem="Jqe-Gt-rdm" firstAttribute="centerX" secondItem="Bch-Ao-JxT" secondAttribute="centerX" id="dM0-rx-F3W"/>
                             <constraint firstItem="Jqe-Gt-rdm" firstAttribute="centerY" secondItem="Bch-Ao-JxT" secondAttribute="centerY" priority="750" id="kQb-sF-nGP"/>
                             <constraint firstAttribute="leadingMargin" secondItem="Jqe-Gt-rdm" secondAttribute="leading" id="o4s-sh-p7u"/>
-                            <constraint firstItem="Zyg-VF-gv1" firstAttribute="leading" secondItem="Bch-Ao-JxT" secondAttribute="leadingMargin" constant="-20" id="sdW-dv-bqa"/>
+                            <constraint firstItem="Jqe-Gt-rdm" firstAttribute="centerY" secondItem="Bch-Ao-JxT" secondAttribute="centerY" id="pqp-Nr-I0k"/>
+                            <constraint firstItem="qdE-RI-8Zq" firstAttribute="centerX" secondItem="Jqe-Gt-rdm" secondAttribute="centerX" id="t4Q-da-7r2"/>
                             <constraint firstItem="Jqe-Gt-rdm" firstAttribute="centerY" secondItem="Bch-Ao-JxT" secondAttribute="centerY" id="uQf-Vi-how"/>
-                            <constraint firstItem="Zyg-VF-gv1" firstAttribute="top" secondItem="Kcr-tD-NVh" secondAttribute="bottom" id="ukt-nj-Vei"/>
-                            <constraint firstItem="Jqe-Gt-rdm" firstAttribute="centerY" secondItem="Zyg-VF-gv1" secondAttribute="centerY" id="ydZ-OI-1Rl"/>
                         </constraints>
                         <variation key="default">
                             <mask key="constraints">
                                 <exclude reference="5SU-E3-edY"/>
+                                <exclude reference="6td-BT-TzT"/>
                                 <exclude reference="A20-Nf-HuP"/>
                                 <exclude reference="AuT-WS-68x"/>
                                 <exclude reference="D2w-Q1-Phs"/>
@@ -1619,16 +1631,20 @@
                         </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" systemItem="save" id="rj7-zx-Luz">
                             <connections>
-                                <action selector="saveButton:" destination="ACt-8T-axL" id="HQH-kO-Ob3"/>
-                                <segue destination="41M-fK-FB9" kind="unwind" identifier="didAddClass" unwindAction="addClassReturn:" id="BZb-P1-eBJ"/>
+                                <action selector="save:" destination="ACt-8T-axL" id="xSo-IK-Cuu"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <connections>
+                        <outlet property="bigSpinner" destination="qdE-RI-8Zq" id="ilr-yk-AoL"/>
+                        <outlet property="button" destination="IBj-Sy-ZwM" id="nUA-t8-1n4"/>
                         <outlet property="courseTitleTextField" destination="3Qa-Uv-f60" id="Ncm-yf-6A0"/>
                         <outlet property="picker" destination="MUa-cB-Jqd" id="fDx-Tt-FgP"/>
                         <outlet property="spinner" destination="NNH-Zp-0PD" id="yxw-OJ-iH2"/>
+                        <outlet property="textLabelOne" destination="3if-Vw-TUH" id="AbW-fL-ZBG"/>
+                        <outlet property="textLabelTwo" destination="E3H-j5-SmD" id="J7C-i9-Zed"/>
+                        <segue destination="41M-fK-FB9" kind="unwind" identifier="didAddClass" unwindAction="addClassReturn:" id="NnP-EV-9BU"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="zDq-zd-PUO" userLabel="First Responder" sceneMemberID="firstResponder"/>
