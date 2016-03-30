@@ -32,6 +32,7 @@ class AddClassViewController: GenericPickerViewController, UITextFieldDelegate {
         switch identifier {
         case "didAddClass":
             if selectedValue == nil || courseTitleTextField.text == nil { return false }
+            if courseTitleTextField.text == "" { return false }
         default: break
         }
         return true
@@ -61,6 +62,7 @@ class AddClassViewController: GenericPickerViewController, UITextFieldDelegate {
     // MARK: Properties
     var school: School = School(schoolName: nil, stateAbreviation: nil) // Passed from previous view controller
     var professors: [Professor] = []
+    private var error: NSError? { didSet{ self.errorHandling(error) } }
     
     @IBOutlet weak var courseTitleTextField: UITextField!
     @IBOutlet weak var spinner: UIActivityIndicatorView!
@@ -81,10 +83,9 @@ class AddClassViewController: GenericPickerViewController, UITextFieldDelegate {
         dispatch_async(dispatch_get_global_queue(qos, 0)){ () -> Void in
             // Get professor names from database
             var professorNames: [String] = []
-            var error: NSError?
             if let schoolID = self.school.identifier {
                 let table = Table(type: 6)
-                let professorSearch = table.getObjectsWithKeyValue(["school": schoolID], limit: 0, error: &error) as! [Professor]
+                let professorSearch = table.getObjectsWithKeyValue(["school": schoolID], limit: 0, error: &self.error) as! [Professor]
                 for professor in professorSearch {
                     self.professors.append(professor)
                     let professorName: String =  (professor.firstName != "" && professor.lastName != "") ? (professor.lastName + ", " + professor.firstName) : ""
@@ -129,7 +130,20 @@ class AddClassViewController: GenericPickerViewController, UITextFieldDelegate {
                         }
                     )
                     self.presentViewController(alert, animated: true, completion: nil)
-                default: break
+                default: // Error alert
+                    let alert = UIAlertController(
+                        title: "Error \(error!.code)",
+                        message: "Something went wrong. Please go back and try again.",
+                        preferredStyle:  UIAlertControllerStyle.Alert
+                    )
+                    alert.addAction(UIAlertAction(
+                        title: "Dismiss",
+                        style: .Cancel)
+                    { (action: UIAlertAction) -> Void in
+                        self.suspendUI()
+                        }
+                    )
+                    self.presentViewController(alert, animated: true, completion: nil)
                 }
             }
         }
@@ -209,9 +223,7 @@ extension AddClassViewController { // Functionality to allow users to add a prof
                     let qos = Int(QOS_CLASS_USER_INITIATED.rawValue)
                     dispatch_async(dispatch_get_global_queue(qos, 0)){ () -> Void in
                         let newProfessor = Professor(firstNameText: firstName, lastNameText: lastName, schoolID: self.school.identifier)
-                        var error: NSError?
-                        newProfessor.addToDatabase(&error)
-                        self.errorHandling(error)
+                        newProfessor.addToDatabase(&self.error)
                         dispatch_async(dispatch_get_main_queue()) { () -> Void in
                             self.getProfessorNames()
                         }

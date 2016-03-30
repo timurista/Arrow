@@ -42,12 +42,11 @@ class SetupSchoolViewController: GenericPickerViewController {
         get {
             let table = Table(type: 1)
             // Query database for schools with matching state
-            var error: NSError?
             let schools = table.getObjectsWithKeyValue(["state": stateAbreviation], limit: 0, error: &error)
-            errorHandling(error)
             return schools as! [School]
         }
     }
+    private var error: NSError? { didSet{ self.errorHandling(error) } }
     
     @IBOutlet weak var spinner: UIActivityIndicatorView!
     @IBAction func continueButton() {
@@ -90,9 +89,7 @@ class SetupSchoolViewController: GenericPickerViewController {
         dispatch_async(dispatch_get_global_queue(qos, 0)){ () -> Void in
             for school in self.schoolsInState {
                 if school.name == self.selectedValue! {
-                    var error: NSError?
-                    CurrentUser().setSchool(school, error: &error)
-                    self.errorHandling(error)
+                    CurrentUser().setSchool(school, error: &self.error)
                 }
             }
         }
@@ -118,7 +115,20 @@ class SetupSchoolViewController: GenericPickerViewController {
                         }
                     )
                     self.presentViewController(alert, animated: true, completion: nil)
-                default: break
+                default: // Error alert
+                    let alert = UIAlertController(
+                        title: "Error \(error!.code)",
+                        message: "Something went wrong. Please go back and try again.",
+                        preferredStyle:  UIAlertControllerStyle.Alert
+                    )
+                    alert.addAction(UIAlertAction(
+                        title: "Dismiss",
+                        style: .Cancel)
+                    { (action: UIAlertAction) -> Void in
+                        self.suspendUI()
+                        }
+                    )
+                    self.presentViewController(alert, animated: true, completion: nil)
                 }
             }
         }
@@ -189,9 +199,7 @@ extension SetupSchoolViewController { // Functionality to allow users to add a s
                 let qos = Int(QOS_CLASS_USER_INITIATED.rawValue)
                 dispatch_async(dispatch_get_global_queue(qos, 0)){ () -> Void in
                     let newSchool = School(schoolName: name, stateAbreviation: self.stateAbreviation)
-                    var error: NSError?
-                    newSchool.addToDatabase(&error)
-                    self.errorHandling(error)
+                    newSchool.addToDatabase(&self.error)
                     dispatch_async(dispatch_get_main_queue()) { () -> Void in
                         self.selectedValue = name
                         self.continueButton()

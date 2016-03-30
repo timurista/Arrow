@@ -26,6 +26,8 @@ class LoginViewController: UIViewController {
     }
     
     // MARK: Properties
+    private var error: NSError? { didSet{ self.errorHandling(error) } }
+    
     @IBAction func loginButton(sender: UIButton) {
         switch sender.tag{
         case 1: logIn(.Googleplus)
@@ -81,10 +83,8 @@ class LoginViewController: UIViewController {
     private func loggedIn() { // Transition away from login screen
         let qos = Int(QOS_CLASS_USER_INITIATED.rawValue)
         dispatch_async(dispatch_get_global_queue(qos, 0)){ () -> Void in
-            var error: NSError?
-            CurrentUser().refresh(&error)
-            CurrentUser().setUpUserObject(&error)
-            self.errorHandling(error)
+            CurrentUser().refresh(&self.error)
+            CurrentUser().setUpUserObject(&self.error)
             dispatch_async(dispatch_get_main_queue()) { () -> Void in
                 if self.shouldLoadSetup() {
                     self.performSegueWithIdentifier("setup", sender: self)
@@ -134,7 +134,20 @@ class LoginViewController: UIViewController {
                     }
                 )
                 self.presentViewController(alert, animated: true, completion: nil)
-            default: break
+            default: // Error alert
+                let alert = UIAlertController(
+                    title: "Error \(error!.code)",
+                    message: "Something went wrong. Please go back and try again.",
+                    preferredStyle:  UIAlertControllerStyle.Alert
+                )
+                alert.addAction(UIAlertAction(
+                    title: "Dismiss",
+                    style: .Cancel)
+                { (action: UIAlertAction) -> Void in
+                    self.suspendUI()
+                    }
+                )
+                self.presentViewController(alert, animated: true, completion: nil)
             }
         }
     }

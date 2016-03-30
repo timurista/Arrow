@@ -31,7 +31,6 @@ class SetupUserProfileViewController: UIViewController, UITextFieldDelegate {
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        var error: NSError?
         let firstName = firstNameTextField.text!.stringByTrimmingCharactersInSet(
             NSCharacterSet.whitespaceAndNewlineCharacterSet()
         )
@@ -40,12 +39,13 @@ class SetupUserProfileViewController: UIViewController, UITextFieldDelegate {
         )
         let qos = Int(QOS_CLASS_USER_INITIATED.rawValue)
         dispatch_async(dispatch_get_global_queue(qos, 0)){ () -> Void in
-            CurrentUser().setName(firstName, lastName: lastName, error: &error)
+            CurrentUser().setName(firstName, lastName: lastName, error: &self.error)
         }
-        errorHandling(error)
     }
     
     // MARK: Properties
+    private var error: NSError? { didSet{ self.errorHandling(error) } }
+    
     @IBOutlet weak var firstNameTextField: UITextField!
     @IBOutlet weak var lastNameTextField: UITextField!
     @IBAction func dismiss(sender: UITapGestureRecognizer) {
