@@ -15,6 +15,7 @@ class Class {
     var school: String // database: "school"
     var professor: String // database "professor"
     var numberOfMembers: Int
+    var professorObject: Professor = Professor(firstNameText: nil, lastNameText: nil, schoolID: nil) // Set by getProfessor Method
     var identifier: String? //database: "_id", created by database
     
     // MARK: Initializers
@@ -40,6 +41,25 @@ class Class {
         }
     }
     
+    init(fromStoredArray: [String]) {
+        switch fromStoredArray.count {
+        case 7:
+            identifier = fromStoredArray[6]
+            fallthrough
+        case 6:
+            title = fromStoredArray[0]
+            school = fromStoredArray[1]
+            professor = fromStoredArray[2]
+            numberOfMembers = Int(fromStoredArray[3])!
+            professorObject = Professor(firstNameText: fromStoredArray[4], lastNameText: fromStoredArray[5], schoolID: fromStoredArray[1])
+        default:
+            title = ""
+            school = ""
+            professor = ""
+            numberOfMembers = 0
+        }
+    }
+    
     // MARK: Functions
     func addToDatabase(error: NSErrorPointer) {
         let table = Table(type: 2)
@@ -51,9 +71,16 @@ class Class {
         let kiiObject = KiiObject(URI: table.getURI(professor))
         kiiObject.refreshSynchronous(error)
         if error.memory == nil {
-            return Professor(kiiObject: kiiObject)
+            professorObject = Professor(kiiObject: kiiObject)
+        }
+        return professorObject
+    }
+    
+    func getStorableArray() -> [String] {
+        if identifier != nil {
+            return [title, school, professor, "\(numberOfMembers)", professorObject.firstName, professorObject.lastName, identifier!]
         } else {
-            return Professor(firstNameText: nil, lastNameText: nil, schoolID: nil)
+            return [title, school, professor, "\(numberOfMembers)", professorObject.firstName, professorObject.lastName]
         }
     }
 }
