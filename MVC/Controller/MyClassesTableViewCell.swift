@@ -11,7 +11,7 @@ import UIKit
 class MyClassesTableViewCell: UITableViewCell {
     
     // MARK: Properties
-    var infoToDisplay: NSArray? {
+    var classToDisplay: Class? {
         didSet {
             updateUI()
         }
@@ -30,12 +30,10 @@ class MyClassesTableViewCell: UITableViewCell {
         numberOfUsersLabel.text = nil
         
         // Add new information
-        if let newClass = self.infoToDisplay?.firstObject as? Class {
+        if let newClass = self.classToDisplay {
             courseTitle.text = newClass.title
             numberOfUsersLabel.text = "\(newClass.numberOfMembers)"
-        }
-        if let newProfessor = self.infoToDisplay?.lastObject as? Professor {
-            professorName.text = newProfessor.getName()
+            professorName.text = newClass.professorObject.getName()
         }
     }
 }
