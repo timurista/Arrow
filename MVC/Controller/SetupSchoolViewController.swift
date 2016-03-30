@@ -10,7 +10,7 @@ import UIKit
 
 class SetupSchoolViewController: GenericPickerViewController {
     
-    // MARK: Overrided Methods
+    // MARK: Overridden Methods
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         getSchoolNames()

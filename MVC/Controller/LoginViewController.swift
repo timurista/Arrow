@@ -10,8 +10,7 @@ import UIKit
 
 class LoginViewController: UIViewController {
 
-    
-    // MARK: Overrided Methods
+    // MARK: Overridden Methods
     override func viewDidLoad() {
         super.viewDidLoad()
         if CurrentUser().userID != nil {

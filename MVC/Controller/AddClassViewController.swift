@@ -10,7 +10,7 @@ import UIKit
 
 class AddClassViewController: GenericPickerViewController, UITextFieldDelegate {
 
-    // MARK: Overrided Methods
+    // MARK: Overridden Methods
     override func viewDidLoad() {
         super.viewDidLoad()
         courseTitleTextField.delegate = self

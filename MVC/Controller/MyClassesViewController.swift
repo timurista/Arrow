@@ -10,7 +10,7 @@ import UIKit
 
 class MyClassesViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
-    // MARK: Overrided Methods
+    // MARK: Overridden Methods
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView?.delegate = self

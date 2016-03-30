@@ -10,7 +10,7 @@ import UIKit
 
 class SetupUserProfileViewController: UIViewController, UITextFieldDelegate {
     
-    // MARK: Overrided Methods
+    // MARK: Overridden Methods
     override func viewDidLoad() {
         super.viewDidLoad()
         firstNameTextField.delegate = self
