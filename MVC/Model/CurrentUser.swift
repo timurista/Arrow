@@ -63,7 +63,7 @@ class CurrentUser: User {
     
     func logOut() {
         let defaults = NSUserDefaults.standardUserDefaults()
-        let userDefaultsKeys = ["myClassesArray", "userSchoolID"]
+        let userDefaultsKeys = ["myClassesArray", "userSchoolID", "userFirstName", "userLastName"]
         for key in userDefaultsKeys {
             defaults.removeObjectForKey(key)
         }
