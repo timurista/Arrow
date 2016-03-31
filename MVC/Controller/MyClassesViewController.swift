@@ -26,7 +26,10 @@ class MyClassesViewController: UIViewController, UITableViewDelegate, UITableVie
     // MARK: Propertiess
     var display: [Class] = []
     private let defaults = NSUserDefaults.standardUserDefaults()
-    private let userDefaultsKey = "myClassesArray"
+    private let userDefaultsKeyMyClasses = "myClassesArray"
+    private let userDefaultsKeyUserSchoolID = "userSchoolID"
+    private let userDefaultsKeyUserFirstName = "userFirstName"
+    private let userDefaultsKeyUserLastName = "userLastName"
     private var error: NSError? { didSet{ self.errorHandling(error) } }
     
     @IBAction func unwindToMyClasses(segue: UIStoryboardSegue) {}
@@ -50,7 +53,7 @@ class MyClassesViewController: UIViewController, UITableViewDelegate, UITableVie
     private func load() {
         suspendUI()
         // Get stored data from NSUserDefaults if applicable
-        if let storedArray = defaults.arrayForKey(userDefaultsKey) {
+        if let storedArray = defaults.arrayForKey(userDefaultsKeyMyClasses) {
             if storedArray.count != 0 {
                 for storedClassArray in storedArray {
                     let classObject = Class(fromStoredArray: storedClassArray as! [String])
@@ -61,7 +64,7 @@ class MyClassesViewController: UIViewController, UITableViewDelegate, UITableVie
         }
     }
     
-    private func refresh() {
+    func refresh() {
         var temp: [Class] = []
         let qos = Int(QOS_CLASS_BACKGROUND.rawValue)
         dispatch_async(dispatch_get_global_queue(qos, 0)){ () -> Void in
@@ -75,6 +78,19 @@ class MyClassesViewController: UIViewController, UITableViewDelegate, UITableVie
                     temp.append(classToAdd)
                 }
             }
+            
+            // Store current user information
+            let currentUser = CurrentUser()
+            if let schoolID = currentUser.school?.identifier {
+                self.defaults.setObject(schoolID, forKey: self.userDefaultsKeyUserSchoolID)
+            }
+            if let firstName = currentUser.firstName {
+                self.defaults.setObject(firstName, forKey: self.userDefaultsKeyUserFirstName)
+            }
+            if let lastName = currentUser.lastName {
+                self.defaults.setObject(lastName, forKey: self.userDefaultsKeyUserLastName)
+            }
+            
             dispatch_async(dispatch_get_main_queue()) { () -> Void in
                 // Store data from database in NSUserDefaults
                 var arrayToStore: [NSArray] = []
@@ -82,8 +98,8 @@ class MyClassesViewController: UIViewController, UITableViewDelegate, UITableVie
                     let classArrayToStore = classObject.getStorableArray()
                     arrayToStore.append(classArrayToStore)
                 }
-                self.defaults.removeObjectForKey(self.userDefaultsKey)
-                self.defaults.setObject(arrayToStore, forKey: self.userDefaultsKey)
+                self.defaults.removeObjectForKey(self.userDefaultsKeyMyClasses)
+                self.defaults.setObject(arrayToStore, forKey: self.userDefaultsKeyMyClasses)
                 
                 // Reload UI
                 self.suspendUI()
