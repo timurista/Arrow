@@ -19,10 +19,12 @@ class SetupUserProfileViewController: UIViewController, UITextFieldDelegate {
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
+        load()
     }
 
     override func shouldPerformSegueWithIdentifier(identifier: String, sender: AnyObject?) -> Bool {
         switch identifier {
+        case "save": fallthrough
         case "exitSetup":
             if firstNameTextField.text == nil || lastNameTextField.text == nil { return false }
         default: break
@@ -31,29 +33,76 @@ class SetupUserProfileViewController: UIViewController, UITextFieldDelegate {
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        let firstName = firstNameTextField.text!.stringByTrimmingCharactersInSet(
-            NSCharacterSet.whitespaceAndNewlineCharacterSet()
-        )
-        let lastName = lastNameTextField.text!.stringByTrimmingCharactersInSet(
-            NSCharacterSet.whitespaceAndNewlineCharacterSet()
-        )
-        let qos = Int(QOS_CLASS_USER_INITIATED.rawValue)
-        dispatch_async(dispatch_get_global_queue(qos, 0)){ () -> Void in
-            CurrentUser().setName(firstName, lastName: lastName, error: &self.error)
+        if let id = segue.identifier {
+            switch id {
+            case "save": fallthrough
+            case "exitSetup":
+                let firstName = firstNameTextField.text!.stringByTrimmingCharactersInSet(
+                    NSCharacterSet.whitespaceAndNewlineCharacterSet()
+                )
+                let lastName = lastNameTextField.text!.stringByTrimmingCharactersInSet(
+                    NSCharacterSet.whitespaceAndNewlineCharacterSet()
+                )
+                defaults.setObject(firstName, forKey: userDefaultsKeyUserFirstName)
+                defaults.setObject(lastName, forKey: userDefaultsKeyUserLastName)
+                let qos = Int(QOS_CLASS_USER_INITIATED.rawValue)
+                dispatch_async(dispatch_get_global_queue(qos, 0)){ () -> Void in
+                    CurrentUser().setName(firstName, lastName: lastName, error: &self.error)
+                }
+            default: break
+            }
         }
     }
     
     // MARK: Properties
+    private let defaults = NSUserDefaults.standardUserDefaults()
+    private let userDefaultsKeyUserFirstName = "userFirstName"
+    private let userDefaultsKeyUserLastName = "userLastName"
     private var error: NSError? { didSet{ self.errorHandling(error) } }
     
     @IBOutlet weak var firstNameTextField: UITextField!
     @IBOutlet weak var lastNameTextField: UITextField!
+    @IBOutlet weak var profilePicture: UIImageView!
+    @IBOutlet weak var editButton: UIButton!
+    @IBOutlet weak var continueButton: UIButton!
+    @IBOutlet weak var spinner: UIActivityIndicatorView!
     @IBAction func dismiss(sender: UITapGestureRecognizer) {
         firstNameTextField.resignFirstResponder()
         lastNameTextField.resignFirstResponder()
     }
     
     // MARK: Functions
+    func load() {
+        suspendUI()
+        if let firstName = defaults.stringForKey(userDefaultsKeyUserFirstName) {
+            firstNameTextField?.text = firstName
+        }
+        if let lastName = defaults.stringForKey(userDefaultsKeyUserLastName) {
+            lastNameTextField?.text = lastName
+        }
+        updateUI()
+    }
+    
+    func suspendUI() {
+        firstNameTextField?.hidden = true
+        lastNameTextField?.hidden = true
+        profilePicture?.hidden = true
+        editButton?.hidden = true
+        continueButton?.hidden = true
+        spinner?.hidden = false
+        spinner?.startAnimating()
+    }
+    
+    func updateUI() {
+        spinner?.stopAnimating()
+        spinner?.hidden = true
+        firstNameTextField?.hidden = false
+        lastNameTextField?.hidden = false
+        profilePicture?.hidden = false
+        editButton?.hidden = false
+        continueButton?.hidden = false
+    }
+    
     func textFieldShouldReturn(textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
