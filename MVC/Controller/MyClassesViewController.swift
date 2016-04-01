@@ -35,6 +35,7 @@ class MyClassesViewController: UIViewController, UITableViewDelegate, UITableVie
     @IBAction func unwindToMyClasses(segue: UIStoryboardSegue) {}
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var spinner: UIActivityIndicatorView!
+    @IBOutlet weak var noClassesLabel: UILabel!
     @IBAction func editButton(sender: UIBarButtonItem) {
         // Switch between editing and not editing
         if !tableView.editing {
@@ -112,6 +113,7 @@ class MyClassesViewController: UIViewController, UITableViewDelegate, UITableVie
     func suspendUI() {
         display.removeAll()
         tableView.reloadData()
+        noClassesLabel?.hidden = true
         spinner?.hidden = false
         spinner?.startAnimating()
     }
@@ -119,6 +121,9 @@ class MyClassesViewController: UIViewController, UITableViewDelegate, UITableVie
     private func updateUI() {
         display.sortInPlace { $0.title.compare($1.title) == .OrderedAscending }
         tableView.reloadData()
+        if display.count == 0 {
+            noClassesLabel?.hidden = false
+        }
         spinner?.stopAnimating()
         spinner?.hidden = true
     }
