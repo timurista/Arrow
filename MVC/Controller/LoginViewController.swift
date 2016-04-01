@@ -16,6 +16,8 @@ class LoginViewController: UIViewController {
         if CurrentUser().userID != nil {
             suspendUI()
             loggedIn()
+        } else {
+            resetUI()
         }
     }
     
@@ -39,6 +41,7 @@ class LoginViewController: UIViewController {
     @IBOutlet weak var facebookButton: UIButton!
     @IBOutlet weak var twitterButton: UIButton!
     @IBOutlet weak var spinner: UIActivityIndicatorView!
+    @IBOutlet weak var loggingInText: UILabel!
     @IBAction func logOut(segue: UIStoryboardSegue) {}
 
     // MARK: Functions
@@ -48,6 +51,7 @@ class LoginViewController: UIViewController {
         twitterButton?.hidden = true
         spinner?.hidden = false
         spinner?.startAnimating()
+        loggingInText?.hidden = false
     }
     
     private func resetUI() {
@@ -56,6 +60,7 @@ class LoginViewController: UIViewController {
         twitterButton?.hidden = false
         spinner?.stopAnimating()
         spinner?.hidden = true
+        loggingInText?.hidden = true
     }
     
     private func logIn(provider: KiiConnectorProvider){
@@ -119,24 +124,11 @@ class LoginViewController: UIViewController {
                     }
                 )
                 self.presentViewController(alert, animated: true, completion: nil)
-            case 320:
-                let alert = UIAlertController(
-                    title: "Something went wrong",
-                    message: "Please try again.",
-                    preferredStyle:  UIAlertControllerStyle.Alert
-                )
-                alert.addAction(UIAlertAction(
-                    title: "Dismiss",
-                    style: .Cancel)
-                { (action: UIAlertAction) -> Void in
-                    self.resetUI()
-                    }
-                )
-                self.presentViewController(alert, animated: true, completion: nil)
+            case 320: break
             default: // Error alert
                 let alert = UIAlertController(
                     title: "Error \(error!.code)",
-                    message: "Something went wrong. Please go back and try again.",
+                    message: "Something went wrong.",
                     preferredStyle:  UIAlertControllerStyle.Alert
                 )
                 alert.addAction(UIAlertAction(
