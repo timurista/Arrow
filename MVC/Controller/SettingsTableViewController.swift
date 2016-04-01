@@ -15,6 +15,19 @@ class SettingsTableViewController: UITableViewController {
         super.viewDidLoad()
     }
     
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if let id = segue.identifier {
+            switch id {
+            case "logOut":
+                let qos = Int(QOS_CLASS_BACKGROUND.rawValue)
+                dispatch_async(dispatch_get_global_queue(qos, 0)){ () -> Void in
+                    CurrentUser().logOut()
+                }
+            default: break
+            }
+        }
+    }
+    
     // MARK: Properties
     @IBAction func unwindToSettings(segue: UIStoryboardSegue) {}
 }
