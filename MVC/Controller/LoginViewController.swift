@@ -27,6 +27,8 @@ class LoginViewController: UIViewController {
     }
     
     // MARK: Properties
+    private let defaults = NSUserDefaults.standardUserDefaults()
+    private let userDefaultsKey = "userID"
     private var error: NSError? { didSet{ self.errorHandling(error) } }
     
     @IBAction func loginButton(sender: UIButton) {
@@ -89,6 +91,9 @@ class LoginViewController: UIViewController {
         dispatch_async(dispatch_get_global_queue(qos, 0)){ () -> Void in
             CurrentUser().refresh(&self.error)
             CurrentUser().setUpUserObject(&self.error)
+            if let userID = CurrentUser().userID {
+                self.defaults.setObject(userID, forKey: self.userDefaultsKey)
+            }
             dispatch_async(dispatch_get_main_queue()) { () -> Void in
                 if self.shouldLoadSetup() {
                     self.performSegueWithIdentifier("setup", sender: self)
