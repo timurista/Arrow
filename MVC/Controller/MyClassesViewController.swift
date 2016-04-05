@@ -23,7 +23,20 @@ class MyClassesViewController: UIViewController, UITableViewDelegate, UITableVie
         refresh()
     }
     
-    // MARK: Propertiess
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if let id = segue.identifier {
+            switch id {
+            case "goToClass":
+                if let selectedRow = tableView.indexPathForSelectedRow?.section {
+                    let dvc = segue.destinationViewController as! ClassViewController
+                    dvc.classToDisplay = display[selectedRow]
+                }
+            default: break
+            }
+        }
+    }
+    
+    // MARK: Properties
     var display: [Class] = []
     private let defaults = NSUserDefaults.standardUserDefaults()
     private let userDefaultsKeyMyClasses = "myClassesArray"
