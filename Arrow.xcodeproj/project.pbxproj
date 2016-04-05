@@ -9,6 +9,10 @@
 /* Begin PBXBuildFile section */
 		8A3A7E131CAB0B7800164A1A /* MyClassesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A3A7E121CAB0B7800164A1A /* MyClassesViewController.swift */; };
 		8A41739A1C91D61200837ECA /* AddClassViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A4173991C91D61200837ECA /* AddClassViewController.swift */; };
+		8A426ECA1CB2EB8C00A621C5 /* ClassViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A426EC91CB2EB8C00A621C5 /* ClassViewController.swift */; };
+		8A426ECC1CB4169300A621C5 /* PostTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A426ECB1CB4169300A621C5 /* PostTableViewCell.swift */; };
+		8A426ECE1CB416F300A621C5 /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A426ECD1CB416F300A621C5 /* Post.swift */; };
+		8A426ED01CB41F4700A621C5 /* Like.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A426ECF1CB41F4700A621C5 /* Like.swift */; };
 		8A6F44C11C879F5700E16941 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A6F44BA1C879F5700E16941 /* AppDelegate.swift */; };
 		8A6F44C21C879F5700E16941 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8A6F44BC1C879F5700E16941 /* Assets.xcassets */; };
 		8A6F44C31C879F5700E16941 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8A6F44BE1C879F5700E16941 /* LaunchScreen.storyboard */; };
@@ -41,6 +45,10 @@
 /* Begin PBXFileReference section */
 		8A3A7E121CAB0B7800164A1A /* MyClassesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyClassesViewController.swift; sourceTree = "<group>"; };
 		8A4173991C91D61200837ECA /* AddClassViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AddClassViewController.swift; path = MVC/Controller/AddClassViewController.swift; sourceTree = SOURCE_ROOT; };
+		8A426EC91CB2EB8C00A621C5 /* ClassViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClassViewController.swift; sourceTree = "<group>"; };
+		8A426ECB1CB4169300A621C5 /* PostTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostTableViewCell.swift; sourceTree = "<group>"; };
+		8A426ECD1CB416F300A621C5 /* Post.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Post.swift; sourceTree = "<group>"; };
+		8A426ECF1CB41F4700A621C5 /* Like.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Like.swift; sourceTree = "<group>"; };
 		8A6F44BA1C879F5700E16941 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		8A6F44BB1C879F5700E16941 /* Arrow-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Arrow-Bridging-Header.h"; sourceTree = "<group>"; };
 		8A6F44BC1C879F5700E16941 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -131,6 +139,8 @@
 				8A7FFB3B1CAC7AAB00EE5FC4 /* SettingsTableViewController.swift */,
 				8A8B0FB71CAAE38F00804087 /* MyClassesTableViewCell.swift */,
 				8A3A7E121CAB0B7800164A1A /* MyClassesViewController.swift */,
+				8A426EC91CB2EB8C00A621C5 /* ClassViewController.swift */,
+				8A426ECB1CB4169300A621C5 /* PostTableViewCell.swift */,
 			);
 			name = Controller;
 			path = ../MVC/Controller;
@@ -147,6 +157,8 @@
 				8A8257751C8E1F5600804F87 /* Class.swift */,
 				8A8257771C8E1FF100804F87 /* Professor.swift */,
 				8A8B0FB91CAAF43700804087 /* Enrollment.swift */,
+				8A426ECD1CB416F300A621C5 /* Post.swift */,
+				8A426ECF1CB41F4700A621C5 /* Like.swift */,
 			);
 			name = Model;
 			path = ../MVC/Model;
@@ -252,6 +264,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				8A8257761C8E1F5600804F87 /* Class.swift in Sources */,
+				8A426ECE1CB416F300A621C5 /* Post.swift in Sources */,
+				8A426ECA1CB2EB8C00A621C5 /* ClassViewController.swift in Sources */,
 				8A8B0FBA1CAAF43700804087 /* Enrollment.swift in Sources */,
 				8ACBA6891C889B6800959B00 /* CurrentUser.swift in Sources */,
 				8AB6994C1CA59E090037483B /* SetupUserProfileViewController.swift in Sources */,
@@ -262,8 +276,10 @@
 				8A81C9061C87A41F0040FA6E /* SetupSchoolViewController.swift in Sources */,
 				8A41739A1C91D61200837ECA /* AddClassViewController.swift in Sources */,
 				8A8257781C8E1FF100804F87 /* Professor.swift in Sources */,
+				8A426ED01CB41F4700A621C5 /* Like.swift in Sources */,
 				8A81C90B1C87A41F0040FA6E /* User.swift in Sources */,
 				8A81C9071C87A41F0040FA6E /* SetupStateViewController.swift in Sources */,
+				8A426ECC1CB4169300A621C5 /* PostTableViewCell.swift in Sources */,
 				8A81C90A1C87A41F0040FA6E /* Table.swift in Sources */,
 				8AD5E9111C8F56E7009D387D /* SetupClassesViewController.swift in Sources */,
 				8A3A7E131CAB0B7800164A1A /* MyClassesViewController.swift in Sources */,
