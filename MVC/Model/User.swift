@@ -48,4 +48,8 @@ class User {
     func getProfilePicture(){
         
     }
+    
+    func getName() -> String {
+        return (firstName != nil && lastName != nil) ? (firstName! + " " + lastName!) : ""
+    }
 }

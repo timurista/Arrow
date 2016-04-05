@@ -79,6 +79,20 @@ class Table {
                 returnResults.appendContentsOf([classObject])
             }
             return returnResults
+        case 3:
+            var returnResults: [Post] = []
+            for object in allResults {
+                let post = Post(kiiObject: object)
+                returnResults.appendContentsOf([post])
+            }
+            return returnResults
+        case 5:
+            var returnResults: [Like] = []
+            for object in allResults {
+                let like = Like(kiiObject: object)
+                returnResults.appendContentsOf([like])
+            }
+            return returnResults
         case 6:
             var returnResults: [Professor] = []
             for object in allResults {
@@ -164,6 +178,20 @@ class Table {
             for object in resultsAsKiiObjects {
                 let classObject = Class(kiiObject: object)
                 returnResults.appendContentsOf([classObject])
+            }
+            return returnResults
+        case 3:
+            var returnResults: [Post] = []
+            for object in resultsAsKiiObjects {
+                let post = Post(kiiObject: object)
+                returnResults.appendContentsOf([post])
+            }
+            return returnResults
+        case 5:
+            var returnResults: [Like] = []
+            for object in resultsAsKiiObjects {
+                let like = Like(kiiObject: object)
+                returnResults.appendContentsOf([like])
             }
             return returnResults
         case 6:
