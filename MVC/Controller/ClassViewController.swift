@@ -19,33 +19,89 @@ class ClassViewController: UIViewController, UITableViewDelegate, UITableViewDat
         tableView.estimatedRowHeight = tableView.rowHeight
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.addSubview(self.refreshControl)
-        refresh()
+        load()
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+    }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if let id = segue.identifier {
+            switch id {
+            case "goToComments":
+                let dvc = segue.destinationViewController as! CommentsViewController
+                dvc.postToDisplay = passToComments
+            default: break
+            }
+        }
     }
     
     // MARK: Properties
-    var classToDisplay: Class = Class(classTitle: nil, schoolID: nil, professorID: nil)
-    var display: [Post] = []
+    var classToDisplay: Class = Class(classTitle: nil, schoolID: nil, professorID: nil) // Passed from previous view controller
+    private var display: [Post] = []
+    private var passToComments: Post = Post(0)
     lazy var refreshControl: UIRefreshControl = {
         let refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: #selector(ClassViewController.handleRefresh(_:)), forControlEvents: UIControlEvents.ValueChanged)
         return refreshControl
     }()
+    private let defaults = NSUserDefaults.standardUserDefaults()
     private var error: NSError? { didSet{ self.errorHandling(error) } }
     
     @IBOutlet weak var navigationBar: UINavigationItem!
     @IBOutlet weak var tableView: UITableView!
     
     // MARK: Functions
+    private func load() {
+        suspendUI()
+        // Get stored data from NSUserDefaults if applicable
+        if let decoded  = defaults.objectForKey(UserDefaults().keyForPosts) as? NSData {
+            let decodedPosts = NSKeyedUnarchiver.unarchiveObjectWithData(decoded) as! [Post]
+            if decodedPosts.count != 0 {
+                for post in decodedPosts {
+                    if let classID = classToDisplay.identifier {
+                        if post.classID == classID {
+                            display.append(post)
+                        }
+                    }
+                }
+                
+            }
+        }
+        updateUI()
+        refresh()
+    }
+    
     private func refresh() {
         suspendUI()
+        var temp: [Post] = []
         let qos = Int(QOS_CLASS_BACKGROUND.rawValue)
         dispatch_async(dispatch_get_global_queue(qos, 0)){ () -> Void in
             let table = Table(type: 3)
             if let classID = self.classToDisplay.identifier {
                 let results = table.getObjectsWithKeyValue(["class": classID], limit: 0, error: &self.error) as! [Post]
-                self.display = results
+                temp = results
             }
             dispatch_async(dispatch_get_main_queue()){ () -> Void in
+                // Store data from database in NSUserDefaults
+                var postsToKeep: [Post] = []
+                if let decoded  = self.defaults.objectForKey(UserDefaults().keyForPosts) as? NSData {
+                    let decodedPosts = NSKeyedUnarchiver.unarchiveObjectWithData(decoded) as! [Post]
+                    for post in decodedPosts {
+                        if let classID = self.classToDisplay.identifier {
+                            if post.classID != classID {
+                                postsToKeep.append(post)
+                            }
+                        }
+                    }
+                }
+                postsToKeep.appendContentsOf(temp)
+                let encodedData = NSKeyedArchiver.archivedDataWithRootObject(postsToKeep)
+                self.defaults.setObject(encodedData, forKey: UserDefaults().keyForPosts)
+                
+                // Reload UI
+                self.display = temp
                 self.updateUI()
             }
         }
@@ -53,7 +109,6 @@ class ClassViewController: UIViewController, UITableViewDelegate, UITableViewDat
     
     private func suspendUI() {
         refreshControl.beginRefreshing()
-        display.removeAll()
     }
     
     private func updateUI() {
@@ -110,6 +165,8 @@ extension ClassViewController { // TableView implementation
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int { return display.count }
     
+    func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat { return CGFloat.min }
+    
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("postCell", forIndexPath: indexPath) as! PostTableViewCell
         cell.postToDisplay = display[indexPath.row]
@@ -120,10 +177,6 @@ extension ClassViewController { // TableView implementation
         cell.commentButton.tag = indexPath.row
         cell.commentButton.addTarget(self, action: #selector(ClassViewController.comment(_:)), forControlEvents: .TouchUpInside)
         return cell
-    }
-    
-    func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return CGFloat.min
     }
     
     @IBAction func like(sender: UIButton) { // Like button tapped
@@ -147,7 +200,10 @@ extension ClassViewController { // TableView implementation
     }
     
     @IBAction func comment(sender: UIButton) {
+        passToComments = display[sender.tag]
+        performSegueWithIdentifier("goToComments", sender: self)
     }
+    
     @IBAction func more(sender: UIButton) {
     }
 }
