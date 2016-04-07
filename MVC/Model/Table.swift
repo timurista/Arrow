@@ -86,6 +86,13 @@ class Table {
                 returnResults.appendContentsOf([post])
             }
             return returnResults
+        case 4:
+            var returnResults: [Comment] = []
+            for object in allResults {
+                let comment = Comment(kiiObject: object)
+                returnResults.appendContentsOf([comment])
+            }
+            return returnResults
         case 5:
             var returnResults: [Like] = []
             for object in allResults {
@@ -185,6 +192,13 @@ class Table {
             for object in resultsAsKiiObjects {
                 let post = Post(kiiObject: object)
                 returnResults.appendContentsOf([post])
+            }
+            return returnResults
+        case 4:
+            var returnResults: [Comment] = []
+            for object in resultsAsKiiObjects {
+                let comment = Comment(kiiObject: object)
+                returnResults.appendContentsOf([comment])
             }
             return returnResults
         case 5:

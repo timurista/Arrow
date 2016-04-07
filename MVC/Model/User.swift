@@ -8,7 +8,7 @@
 
 import Foundation
 
-class User {
+class User: NSObject, NSCoding {
     
     // MARK: Properties
     var userID: String?
@@ -39,17 +39,38 @@ class User {
                 firstName = user.getObjectForKey("firstName") as? String
                 lastName = user.getObjectForKey("lastName") as? String
                 profilePicture = user.getObjectForKey("profilePicture") as? String
-
             }
         }
     }
     
+    required init(coder aDecoder: NSCoder) {
+        userID = aDecoder.decodeObjectForKey("userID") as? String
+        school = aDecoder.decodeObjectForKey("school") as? School
+        firstName = aDecoder.decodeObjectForKey("firstName") as? String
+        lastName = aDecoder.decodeObjectForKey("lastName") as? String
+        profilePicture = aDecoder.decodeObjectForKey("profilePicture") as? String
+    }
+    
     // MARK: Function
-    func getProfilePicture(){
-        
+    func getProfilePicture() -> UIImage? {
+        if userID == "576c66a00022-da7b-5e11-386d-08db87fd" {
+            return UIImage(named: "Profile-1")
+        } else if userID == "dff95c2bd1201e7ca5cf2a83e829068e" {
+            return UIImage(named: "Profile-2")
+        } else {
+            return UIImage(named: "Logo-NoCircle")
+        }
     }
     
     func getName() -> String {
         return (firstName != nil && lastName != nil) ? (firstName! + " " + lastName!) : ""
+    }
+    
+    func encodeWithCoder(aCoder: NSCoder) {
+        aCoder.encodeObject(userID, forKey: "userID")
+        aCoder.encodeObject(school, forKey: "school")
+        aCoder.encodeObject(firstName, forKey: "firstName")
+        aCoder.encodeObject(lastName, forKey: "lastName")
+        aCoder.encodeObject(profilePicture, forKey: "profilePicture")
     }
 }

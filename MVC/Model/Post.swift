@@ -8,23 +8,25 @@
 
 import Foundation
 
-class Post {
+class Post: NSObject, NSCoding {
     
     // MARK: Properties
     var user: User // database: "_owner"
     var text: String // database: "text"
     var date: Double // database: "_created"
+    var classID: String // database: "class"
     var numberOfLikes: Int
     var numberOfComments: Int
     var liked: Bool
     var identifier: String? //database: "_id", created by database
     
     // MARK: Initializers
-    init() {
+    init(_: Int) {
         var error: NSError?
         user = User(userIdentifier: nil, error: &error)
         text = ""
         date = 0
+        classID = ""
         numberOfComments = 0
         numberOfLikes = 0
         liked = false
@@ -34,6 +36,7 @@ class Post {
         text = kiiObject.getObjectForKey("text") as! String
         date = (kiiObject.getObjectForKey("_created") as! Double) / 1000
         identifier = kiiObject.getObjectForKey("_id") as? String
+        classID = kiiObject.getObjectForKey("class") as! String
         var error: NSError?
         if let userID = kiiObject.getObjectForKey("_owner") as? String {
             let table = Table(type: 0)
@@ -66,6 +69,17 @@ class Post {
             numberOfComments = 0
             liked = false
         }
+    }
+    
+    required init(coder aDecoder: NSCoder) {
+        user = aDecoder.decodeObjectForKey("user") as! User
+        text = aDecoder.decodeObjectForKey("text") as! String
+        date = aDecoder.decodeObjectForKey("date") as! Double
+        classID = aDecoder.decodeObjectForKey("classID") as! String
+        numberOfLikes = aDecoder.decodeIntegerForKey("numberOfLikes")
+        numberOfComments = aDecoder.decodeIntegerForKey("numberOfComments")
+        liked = aDecoder.decodeObjectForKey("liked") as! Bool
+        identifier = aDecoder.decodeObjectForKey("id") as? String
     }
     
     // MARK: Functions
@@ -101,5 +115,16 @@ class Post {
                 table.deleteObjectWithStringKeys(["post": postID, "_owner": userID], error: error)
             }
         }
+    }
+    
+    func encodeWithCoder(aCoder: NSCoder) {
+        aCoder.encodeObject(user, forKey: "user")
+        aCoder.encodeObject(text, forKey: "text")
+        aCoder.encodeObject(date, forKey: "date")
+        aCoder.encodeObject(classID, forKey: "classID")
+        aCoder.encodeInteger(numberOfLikes, forKey: "numberOfLikes")
+        aCoder.encodeInteger(numberOfComments, forKey: "numberOfComments")
+        aCoder.encodeObject(liked, forKey: "liked")
+        aCoder.encodeObject(identifier, forKey: "id")
     }
 }

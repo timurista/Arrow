@@ -8,7 +8,7 @@
 
 import Foundation
 
-class Professor {
+class Professor: NSObject, NSCoding {
     
     // MARK: Properties
     var firstName: String // database: "firstName"
@@ -30,6 +30,13 @@ class Professor {
         identifier = kiiObject.getObjectForKey("_id") as? String
     }
     
+    required init(coder aDecoder: NSCoder) {
+        firstName = aDecoder.decodeObjectForKey("firstName") as! String
+        lastName = aDecoder.decodeObjectForKey("lastName") as! String
+        school = aDecoder.decodeObjectForKey("school") as! String
+        identifier = aDecoder.decodeObjectForKey("id") as? String
+    }
+    
     // MARK: Functions
     func addToDatabase(error: NSErrorPointer) {
         let table = Table(type: 6)
@@ -38,5 +45,12 @@ class Professor {
     
     func getName() -> String {
         return (firstName != "" && lastName != "") ? (lastName + ", " + firstName) : ""
+    }
+    
+    func encodeWithCoder(aCoder: NSCoder) {
+        aCoder.encodeObject(firstName, forKey: "firstName")
+        aCoder.encodeObject(lastName, forKey: "lastName")
+        aCoder.encodeObject(school, forKey: "school")
+        aCoder.encodeObject(identifier, forKey: "id")
     }
 }

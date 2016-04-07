@@ -8,7 +8,7 @@
 
 import Foundation
 
-class Class {
+class Class: NSObject, NSCoding {
     
     // MARK: Properties
     var title: String // database: "title"
@@ -41,23 +41,13 @@ class Class {
         }
     }
     
-    init(fromStoredArray: [String]) {
-        switch fromStoredArray.count {
-        case 7:
-            identifier = fromStoredArray[6]
-            fallthrough
-        case 6:
-            title = fromStoredArray[0]
-            school = fromStoredArray[1]
-            professor = fromStoredArray[2]
-            numberOfMembers = Int(fromStoredArray[3])!
-            professorObject = Professor(firstNameText: fromStoredArray[4], lastNameText: fromStoredArray[5], schoolID: fromStoredArray[1])
-        default:
-            title = ""
-            school = ""
-            professor = ""
-            numberOfMembers = 0
-        }
+    required init(coder aDecoder: NSCoder) {
+        title = aDecoder.decodeObjectForKey("title") as! String
+        school = aDecoder.decodeObjectForKey("school") as! String
+        professor = aDecoder.decodeObjectForKey("professor") as! String
+        numberOfMembers = aDecoder.decodeIntegerForKey("numberOfMembers")
+        professorObject = aDecoder.decodeObjectForKey("professorObject") as! Professor
+        identifier = aDecoder.decodeObjectForKey("id") as? String
     }
     
     // MARK: Functions
@@ -76,11 +66,12 @@ class Class {
         return professorObject
     }
     
-    func getStorableArray() -> [String] {
-        if identifier != nil {
-            return [title, school, professor, "\(numberOfMembers)", professorObject.firstName, professorObject.lastName, identifier!]
-        } else {
-            return [title, school, professor, "\(numberOfMembers)", professorObject.firstName, professorObject.lastName]
-        }
+    func encodeWithCoder(aCoder: NSCoder) {
+        aCoder.encodeObject(title, forKey: "title")
+        aCoder.encodeObject(school, forKey: "school")
+        aCoder.encodeObject(professor, forKey: "professor")
+        aCoder.encodeInteger(numberOfMembers, forKey: "numberOfMembers")
+        aCoder.encodeObject(professorObject, forKey: "professorObject")
+        aCoder.encodeObject(identifier, forKey: "id")
     }
 }

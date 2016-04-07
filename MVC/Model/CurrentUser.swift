@@ -16,6 +16,10 @@ class CurrentUser: User {
         super.init(userIdentifier: KiiUser.currentUser()?.userID, error: &error)
     }
     
+    required init(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
+    
     // MARK: Functions
     func setUpUserObject(error: NSErrorPointer) {
         if userID != nil {
@@ -63,7 +67,7 @@ class CurrentUser: User {
     
     func logOut() {
         let defaults = NSUserDefaults.standardUserDefaults()
-        let userDefaultsKeys = ["myClassesArray", "userSchoolID", "userFirstName", "userLastName", "userID"]
+        let userDefaultsKeys = UserDefaults().keys
         for key in userDefaultsKeys {
             defaults.removeObjectForKey(key)
         }

@@ -8,7 +8,7 @@
 
 import Foundation
 
-class School {
+class School: NSObject, NSCoding {
     
     // MARK: Properties
     var name: String // database: "name"
@@ -27,9 +27,21 @@ class School {
         identifier = kiiObject.getObjectForKey("_id") as? String
     }
     
+    required init(coder aDecoder: NSCoder) {
+        name = aDecoder.decodeObjectForKey("name") as! String
+        state = aDecoder.decodeObjectForKey("state") as! String
+        identifier = aDecoder.decodeObjectForKey("id") as? String
+    }
+    
     // MARK: Functions
     func addToDatabase(error: NSErrorPointer) {
         let table = Table(type: 1)
         table.createObjectWithStringKeys(["name": name, "state": state], error: error)
+    }
+    
+    func encodeWithCoder(aCoder: NSCoder) {
+        aCoder.encodeObject(name, forKey: "name")
+        aCoder.encodeObject(state, forKey: "state")
+        aCoder.encodeObject(identifier, forKey: "id")
     }
 }
