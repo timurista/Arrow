@@ -944,7 +944,7 @@
         <!--Main Tab Bar Controller-->
         <scene sceneID="FJf-CE-bAS">
             <objects>
-                <tabBarController title="Main Tab Bar Controller" id="mbJ-v8-aFZ" sceneMemberID="viewController">
+                <tabBarController storyboardIdentifier="home" title="Main Tab Bar Controller" id="mbJ-v8-aFZ" sceneMemberID="viewController">
                     <tabBar key="tabBar" contentMode="scaleToFill" id="SOn-6g-qLR">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="49"/>
                         <autoresizingMask key="autoresizingMask"/>

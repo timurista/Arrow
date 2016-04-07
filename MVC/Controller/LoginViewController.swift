@@ -15,9 +15,17 @@ class LoginViewController: UIViewController {
         super.viewDidLoad()
         if CurrentUser().userID != nil {
             suspendUI()
-            loggedIn()
+            skip = true
         } else {
             resetUI()
+        }
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        if skip {
+            skip = false
+            performSegueWithIdentifier("home", sender: self)
         }
     }
     
@@ -27,6 +35,7 @@ class LoginViewController: UIViewController {
     }
     
     // MARK: Properties
+    private var skip: Bool = false
     private let defaults = NSUserDefaults.standardUserDefaults()
     private var error: NSError? { didSet{ self.errorHandling(error) } }
     
