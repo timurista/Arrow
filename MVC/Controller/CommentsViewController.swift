@@ -23,6 +23,7 @@ class CommentsViewController: UIViewController, UITableViewDelegate, UITableView
     // MARK: Properties
     var postToDisplay: Post = Post(0) // Passed from previous view controller
     private var display: [Comment] = []
+    private let defaults = NSUserDefaults.standardUserDefaults()
     private var error: NSError? { didSet{ self.errorHandling(error) } }
     
     @IBOutlet weak var tableView: UITableView!
@@ -55,6 +56,18 @@ class CommentsViewController: UIViewController, UITableViewDelegate, UITableView
         tableView.reloadData()
         spinner?.stopAnimating()
         spinner?.hidden = true
+    }
+    
+    private func removeComment(index: Int) {
+        if let commentID = display[index].identifier {
+            display.removeAtIndex(index)
+            tableView.reloadData()
+            let qos = Int(QOS_CLASS_USER_INITIATED.rawValue)
+            dispatch_async(dispatch_get_global_queue(qos, 0)){ () -> Void in
+                let table = Table(type: 4)
+                table.deleteObjectWithStringKeys(["_id": commentID], error: &self.error)
+            }
+        }
     }
     
     private func errorHandling(error: NSError?) {
@@ -107,5 +120,24 @@ extension CommentsViewController { // TableView implementation
         let cell = tableView.dequeueReusableCellWithIdentifier("commentCell", forIndexPath: indexPath) as! CommentTableViewCell
         cell.commentToDisplay = display[indexPath.row]
         return cell
+    }
+    
+    func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+        if display[indexPath.row].user.userID == defaults.stringForKey(UserDefaults().keyForUserID) {
+            return true
+        } else if postToDisplay.user.userID == defaults.stringForKey(UserDefaults().keyForUserID) {
+            return true
+        } else {
+            return false
+        }
+    }
+    
+    func tableView(tableView: UITableView, editingStyleForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCellEditingStyle { return .Delete }
+    
+    func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+        if editingStyle == .Delete {
+            // Delete the row from the data source
+            removeComment(indexPath.row)
+        }
     }
 }
