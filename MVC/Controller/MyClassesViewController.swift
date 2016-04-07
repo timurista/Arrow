@@ -39,10 +39,6 @@ class MyClassesViewController: UIViewController, UITableViewDelegate, UITableVie
     // MARK: Properties
     var display: [Class] = []
     private let defaults = NSUserDefaults.standardUserDefaults()
-    private let userDefaultsKeyMyClasses = "myClassesArray"
-    private let userDefaultsKeyUserSchoolID = "userSchoolID"
-    private let userDefaultsKeyUserFirstName = "userFirstName"
-    private let userDefaultsKeyUserLastName = "userLastName"
     private var error: NSError? { didSet{ self.errorHandling(error) } }
     
     @IBAction func unwindToMyClasses(segue: UIStoryboardSegue) {}
@@ -67,14 +63,12 @@ class MyClassesViewController: UIViewController, UITableViewDelegate, UITableVie
     private func load() {
         suspendUI()
         // Get stored data from NSUserDefaults if applicable
-        if let storedArray = defaults.arrayForKey(userDefaultsKeyMyClasses) {
-            if storedArray.count != 0 {
-                for storedClassArray in storedArray {
-                    let classObject = Class(fromStoredArray: storedClassArray as! [String])
-                    display.append(classObject)
-                }
+        if let decoded  = defaults.objectForKey(UserDefaults().keyForMyClasses) as? NSData {
+            let decodedClasses = NSKeyedUnarchiver.unarchiveObjectWithData(decoded) as! [Class]
+            if decodedClasses.count != 0 {
+                display = decodedClasses
+                updateUI()
             }
-            updateUI()
         }
     }
     
@@ -96,24 +90,20 @@ class MyClassesViewController: UIViewController, UITableViewDelegate, UITableVie
             // Store current user information
             let currentUser = CurrentUser()
             if let schoolID = currentUser.school?.identifier {
-                self.defaults.setObject(schoolID, forKey: self.userDefaultsKeyUserSchoolID)
+                self.defaults.setObject(schoolID, forKey: UserDefaults().keyForUserSchool)
             }
             if let firstName = currentUser.firstName {
-                self.defaults.setObject(firstName, forKey: self.userDefaultsKeyUserFirstName)
+                self.defaults.setObject(firstName, forKey: UserDefaults().keyForUserFirstName)
             }
             if let lastName = currentUser.lastName {
-                self.defaults.setObject(lastName, forKey: self.userDefaultsKeyUserLastName)
+                self.defaults.setObject(lastName, forKey: UserDefaults().keyForUserLastName)
             }
             
             dispatch_async(dispatch_get_main_queue()) { () -> Void in
                 // Store data from database in NSUserDefaults
-                var arrayToStore: [NSArray] = []
-                for classObject in temp {
-                    let classArrayToStore = classObject.getStorableArray()
-                    arrayToStore.append(classArrayToStore)
-                }
-                self.defaults.removeObjectForKey(self.userDefaultsKeyMyClasses)
-                self.defaults.setObject(arrayToStore, forKey: self.userDefaultsKeyMyClasses)
+                let encodedData = NSKeyedArchiver.archivedDataWithRootObject(temp)
+                self.defaults.removeObjectForKey(UserDefaults().keyForMyClasses)
+                self.defaults.setObject(encodedData, forKey: UserDefaults().keyForMyClasses)
                 
                 // Reload UI
                 self.suspendUI()
@@ -205,13 +195,9 @@ extension MyClassesViewController { // TableView implementation
         return cell
     }
     
-    func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 20
-    }
+    func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat { return 20 }
     
-    func tableView(tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return CGFloat.min
-    }
+    func tableView(tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat { return CGFloat.min }
     
     func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool { return tableView.editing }
     
