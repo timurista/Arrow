@@ -29,9 +29,13 @@ class PostTableViewCell: UITableViewCell {
     @IBOutlet weak var moreImage: UIImageView!
     @IBOutlet weak var moreButton: UIButton!
     @IBOutlet weak var commentButton: UIButton!
+    @IBOutlet weak var profilePicture: UIImageView!
     
     // MARK: Functions
     func updateUI() {
+        
+        profilePicture.layer.cornerRadius = 8
+        profilePicture.clipsToBounds = true
         
         // Reset information
         userNameLabel.text = nil

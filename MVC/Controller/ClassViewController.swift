@@ -106,20 +106,24 @@ class ClassViewController: UIViewController, UITableViewDelegate, UITableViewDat
 
 extension ClassViewController { // TableView implementation
     
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int { return display.count }
+    func numberOfSectionsInTableView(tableView: UITableView) -> Int { return 1 }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int { return 1 }
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int { return display.count }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("postCell", forIndexPath: indexPath) as! PostTableViewCell
-        cell.postToDisplay = display[indexPath.section]
-        cell.likeButton.tag = indexPath.section
+        cell.postToDisplay = display[indexPath.row]
+        cell.likeButton.tag = indexPath.row
         cell.likeButton.addTarget(self, action: #selector(ClassViewController.like(_:)), forControlEvents: .TouchUpInside)
-        cell.moreButton.tag = indexPath.section
+        cell.moreButton.tag = indexPath.row
         cell.moreButton.addTarget(self, action: #selector(ClassViewController.more(_:)), forControlEvents: .TouchUpInside)
-        cell.commentButton.tag = indexPath.section
+        cell.commentButton.tag = indexPath.row
         cell.commentButton.addTarget(self, action: #selector(ClassViewController.comment(_:)), forControlEvents: .TouchUpInside)
         return cell
+    }
+    
+    func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return CGFloat.min
     }
     
     @IBAction func like(sender: UIButton) { // Like button tapped

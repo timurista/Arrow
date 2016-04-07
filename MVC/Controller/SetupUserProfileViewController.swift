@@ -19,6 +19,8 @@ class SetupUserProfileViewController: UIViewController, UITextFieldDelegate {
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
+        profilePicture.layer.cornerRadius = 8
+        profilePicture.clipsToBounds = true
         load()
     }
 
