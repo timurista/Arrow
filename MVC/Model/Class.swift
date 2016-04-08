@@ -41,7 +41,8 @@ class Class: NSObject, NSCoding {
         }
     }
     
-    required init(coder aDecoder: NSCoder) {
+    required convenience init(coder aDecoder: NSCoder) {
+        self.init(classTitle: nil, schoolID: nil, professorID: nil)
         title = aDecoder.decodeObjectForKey("title") as! String
         school = aDecoder.decodeObjectForKey("school") as! String
         professor = aDecoder.decodeObjectForKey("professor") as! String

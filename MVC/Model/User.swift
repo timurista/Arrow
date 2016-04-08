@@ -32,7 +32,10 @@ class User: NSObject, NSCoding {
                 let schoolID = user.getObjectForKey("school") as? String
                 let schoolTable = Table(type: 1)
                 if schoolID != nil {
-                    school = (schoolTable.getObjectsWithKeyValue(["_id": schoolID!], limit: 1, error: error))[0] as? School
+                    let results = (schoolTable.getObjectsWithKeyValue(["_id": schoolID!], limit: 1, error: error))
+                    if results.count != 0 {
+                        school = results[0] as? School
+                    }
                 }
                 
                 // Get user's firstName, lastName and profilePicture
@@ -43,7 +46,9 @@ class User: NSObject, NSCoding {
         }
     }
     
-    required init(coder aDecoder: NSCoder) {
+    required convenience init(coder aDecoder: NSCoder) {
+        var error: NSError?
+        self.init(userIdentifier: nil, error: &error)
         userID = aDecoder.decodeObjectForKey("userID") as? String
         school = aDecoder.decodeObjectForKey("school") as? School
         firstName = aDecoder.decodeObjectForKey("firstName") as? String

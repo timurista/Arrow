@@ -71,7 +71,8 @@ class Post: NSObject, NSCoding {
         }
     }
     
-    required init(coder aDecoder: NSCoder) {
+    required convenience init(coder aDecoder: NSCoder) {
+        self.init(0)
         user = aDecoder.decodeObjectForKey("user") as! User
         text = aDecoder.decodeObjectForKey("text") as! String
         date = aDecoder.decodeObjectForKey("date") as! Double

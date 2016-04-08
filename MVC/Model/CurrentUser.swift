@@ -16,8 +16,8 @@ class CurrentUser: User {
         super.init(userIdentifier: KiiUser.currentUser()?.userID, error: &error)
     }
     
-    required init(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
+    required convenience init(coder aDecoder: NSCoder) {
+        self.init()
     }
     
     // MARK: Functions

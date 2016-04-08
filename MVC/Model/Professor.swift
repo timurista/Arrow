@@ -30,7 +30,8 @@ class Professor: NSObject, NSCoding {
         identifier = kiiObject.getObjectForKey("_id") as? String
     }
     
-    required init(coder aDecoder: NSCoder) {
+    required convenience init(coder aDecoder: NSCoder) {
+        self.init(firstNameText: nil, lastNameText: nil, schoolID: nil)
         firstName = aDecoder.decodeObjectForKey("firstName") as! String
         lastName = aDecoder.decodeObjectForKey("lastName") as! String
         school = aDecoder.decodeObjectForKey("school") as! String

@@ -27,7 +27,8 @@ class School: NSObject, NSCoding {
         identifier = kiiObject.getObjectForKey("_id") as? String
     }
     
-    required init(coder aDecoder: NSCoder) {
+    required convenience init(coder aDecoder: NSCoder) {
+        self.init(schoolName: nil, stateAbreviation: nil)
         name = aDecoder.decodeObjectForKey("name") as! String
         state = aDecoder.decodeObjectForKey("state") as! String
         identifier = aDecoder.decodeObjectForKey("id") as? String
